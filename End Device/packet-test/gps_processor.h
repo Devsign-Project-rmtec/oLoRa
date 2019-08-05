@@ -21,7 +21,7 @@ public:
         static int seq = 0;
         static int waitLength = 1;
         static int commas = 0;
-        static String buffer;
+        static char buffer[15];
         static int8_t idx = 0;
         static char c;
         static double flat = 0;
@@ -40,13 +40,13 @@ public:
                 break;
 
             case 1: // looking for GPRMC
-                buffer = "";
-                for(int i = 0; i < 5; i++) buffer += s->read();
+                memset(buffer, 0, sizeof(buffer));
+                for(idx = 0; idx < 5; idx++) buffer[idx] = s->read();
                 if(buffer == "GPRMC") {
                     waitLength = 1;
                     seq = 2;
                     idx = 0;
-                    buffer = "";
+                    memset(buffer, 0, sizeof(buffer));
                 }
                 else seq = 0;
                 break;
@@ -61,8 +61,7 @@ public:
                 else {
                     switch(commas) {
                         case 3: // latitude string
-                            // buffer[idx++] = c;
-                            buffer += c;
+                            buffer[idx++] = c;
                             break;
 
                         case 4: // latitude direction
@@ -70,19 +69,18 @@ public:
                             // memcpy((p + sizeof(p->latitude) - strlen(buffer))->latitude, buffer, strlen(buffer));
                             // memset(buffer, 0, sizeof(buffer));
                             latdir = (c == 'S');
-                            flat = std::stof(buffer);
-                            flat = flat/100 + (flat%100)*0.01/60;
+                            flat = atof(buffer) * 0.01;
+                            flat = (unsigned byte)flat + (flat - (unsigned byte)flat) / 60;
 
                             
-                            buffer = "";
+                            memset(buffer, 0, sizeof(buffer));
 
                             idx = 0;
                             seq = 2; // inserted due to compiler bug
                             break;
 
                         case 5: // longitude string
-                            // buffer[idx++] = c;
-                            buffer += c;
+                            buffer[idx++] = c;
                             break;
 
                         case 6: // longitude direction
@@ -91,10 +89,10 @@ public:
                             // memset(buffer, 0, sizeof(buffer));
 
                             londir = (c == 'E');
-                            flon = std::stof(buffer);
-                            flon = flon/100 + (flon%100)*0.01/60;
+                            flon = atof(buffer) * 0.01;
+                            flon = (unsigned byte)flon + (flon - (unsigned byte)flon) / 60;
 
-                            buffer = "";
+                            memset(buffer, 0, sizeof(buffer));
 
                             idx = 0;
                             commas = 0;
