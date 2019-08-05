@@ -1,18 +1,17 @@
-#include <SoftwareSerial.h>
 #include "gps_processor.h"
 #include "HTU21D.h"
 #include "packet.h"
 
+#define GPS Serial1
+#define LoRa Serial2
 
 
 Packet packet;
-
-SoftwareSerial GPS(4, 5);
 GPS_Processor gps_processor(&GPS, &packet);
 HTU21D htu(HTU21D_RES_RH12_TEMP14);
 
 void setup(){
-    Serial.begin(115200);
+    LoRa.begin(115200);
     GPS.begin(9600);
     htu.begin();
 }
