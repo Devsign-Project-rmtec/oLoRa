@@ -18,16 +18,21 @@ public:
         // 0: $ not found
         // 1: looking for GPRMC
         // 2: parsing
-        static int seq = 0;
-        static int waitLength = 1;
-        static int commas = 0;
+        static int8_t seq = 0;
+        static int8_t waitLength = 1;
+        static int8_t commas = 0;
         static char buffer[15];
-        static int8_t idx = 0;
-        static char c;
-        static double flat = 0;
-        static double flon = 0;
+        static char npart[8] = { 0 };
+        static char dpart[8] = { 0 };
+        static int32_t n;
+        static int32_t d;
+        static int32_t latitude = 0;
+        static int32_t longitude = 0;
         static bool latdir = false; // N:false, S:true
         static bool londir = false; // W:false, E:true
+        
+        static int8_t idx = 0;
+        static char c;
 
         if (s->available() >= waitLength) {
             switch (seq) {
@@ -65,15 +70,17 @@ public:
                             break;
 
                         case 4: // latitude direction
-                            // buffer[idx++] = c;
-                            // memcpy((p + sizeof(p->latitude) - strlen(buffer))->latitude, buffer, strlen(buffer));
-                            // memset(buffer, 0, sizeof(buffer));
                             latdir = (c == 'S');
-                            flat = atof(buffer) * 0.01;
-                            flat = (unsigned byte)flat + (flat - (unsigned byte)flat) / 60;
-
-                            
+                            strcpy(npart, strtok(buffer, "."));
+                            strcpy(dpart, strtok(buffer, "."));
                             memset(buffer, 0, sizeof(buffer));
+
+                            n = atoi(npart);
+                            d = atoi(dpart);
+                            d += (n % 100) * 10000 / 60;
+                            n /= 100;
+                            latitude = n * 100000 + d;
+
 
                             idx = 0;
                             seq = 2; // inserted due to compiler bug
@@ -84,23 +91,25 @@ public:
                             break;
 
                         case 6: // longitude direction
-                            // buffer[idx++] = c;
-                            // memcpy((p + sizeof(p->longitude) - strlen(buffer))->longitude, buffer, strlen(buffer));
-                            // memset(buffer, 0, sizeof(buffer));
 
                             londir = (c == 'E');
-                            flon = atof(buffer) * 0.01;
-                            flon = (unsigned byte)flon + (flon - (unsigned byte)flon) / 60;
-
+                            strcpy(npart, strtok(buffer, "."));
+                            strcpy(dpart, strtok(buffer, "."));
                             memset(buffer, 0, sizeof(buffer));
+
+                            n = atoi(npart);
+                            d = atoi(dpart);
+                            d += (n % 100) * 10000 / 60;
+                            n /= 100;
+                            longitude = n * 100000 + d;
 
                             idx = 0;
                             commas = 0;
                             seq = 0;
 
                             p->direction |= latdir << 0 | londir << 1;
-                            p->latitude = flat;
-                            p->longitude = flon;
+                            p->latitude = latitude;
+                            p->longitude = longitude;
 
                             break;
 
