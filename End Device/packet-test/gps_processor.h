@@ -28,7 +28,7 @@ public:
         static int32_t d;
         static int32_t latitude = 0;
         static int32_t longitude = 0;
-        static bool latdir = false; // N:false, S:true
+        static bool latdir = false; // S:false, N:true
         static bool londir = false; // W:false, E:true
         
         static int8_t idx = 0;
@@ -70,7 +70,7 @@ public:
                             break;
 
                         case 4: // latitude direction
-                            latdir = (c == 'S');
+                            latdir = (c == 'N');
                             strcpy(npart, strtok(buffer, "."));
                             strcpy(dpart, strtok(buffer, "."));
                             memset(buffer, 0, sizeof(buffer));
@@ -106,10 +106,8 @@ public:
                             idx = 0;
                             commas = 0;
                             seq = 0;
-
-                            p->direction |= latdir << 0 | londir << 1;
-                            p->latitude = latitude;
-                            p->longitude = longitude;
+                            p->latitude = latitude * (latdir ? 1 : -1);
+                            p->longitude = longitude * (londir ? 1 : -1);
 
                             break;
 
