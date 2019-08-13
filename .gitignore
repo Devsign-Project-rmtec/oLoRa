@@ -494,3 +494,4 @@ MigrationBackup/
 # End of https://www.gitignore.io/api/visualstudio,androidstudio,visualstudiocode
 End Device/packet-test/.vscode/settings.json
 End Device/packet-test/.build/*
+blog/.deploy_git/
