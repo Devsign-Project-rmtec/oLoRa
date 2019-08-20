@@ -492,6 +492,8 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/visualstudio,androidstudio,visualstudiocode
-End Device/packet-test/.vscode/settings.json
+End Device/gps-geiger/.vscode/*
+End Device/gps-geiger/.build/*
+End Device/packet-test/.vscode/*
 End Device/packet-test/.build/*
 blog/.deploy_git/
