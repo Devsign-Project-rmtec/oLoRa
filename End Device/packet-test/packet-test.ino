@@ -1,10 +1,12 @@
 #include "gps_processor.h"
 #include "HTU21D.h"
 #include "packet.h"
+#include <SoftwareSerial.h>
 
-#define GPS Serial1
-#define LoRa Serial2
+//#define GPS Serial1
+#define LoRa Serial
 
+SoftwareSerial GPS(4, 5);
 
 Packet packet;
 GPS_Processor gps_processor(&GPS, &packet);

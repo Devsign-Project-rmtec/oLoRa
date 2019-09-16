@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Arduino.h"
+#include <SoftwareSerial.h>
 #include "packet.h"
 
 class GPS_Processor {
 private:
-    HardwareSerial* s;
+    SoftwareSerial* s;
     Packet* p;
 
 public:
-    GPS_Processor(HardwareSerial* hwSerial, Packet* packet) : s(hwSerial), p(packet) {
+    GPS_Processor(SoftwareSerial* hwSerial, Packet* packet) : s(hwSerial), p(packet) {
 
     } 
 
@@ -26,6 +27,8 @@ public:
         static char dpart[8] = { 0 };
         static int32_t n;
         static int32_t d;
+        static uint32_t integer;
+        static int32_t decimal;
         static int32_t latitude = 0;
         static int32_t longitude = 0;
         static bool latdir = false; // S:false, N:true
@@ -47,7 +50,7 @@ public:
             case 1: // looking for GPRMC
                 memset(buffer, 0, sizeof(buffer));
                 for(idx = 0; idx < 5; idx++) buffer[idx] = s->read();
-                if(buffer == "GPRMC") {
+                if(!strcmp(buffer, "GPRMC")) {
                     waitLength = 1;
                     seq = 2;
                     idx = 0;
@@ -71,15 +74,16 @@ public:
 
                         case 4: // latitude direction
                             latdir = (c == 'N');
+
                             strcpy(npart, strtok(buffer, "."));
                             strcpy(dpart, strtok(buffer, "."));
                             memset(buffer, 0, sizeof(buffer));
 
                             n = atoi(npart);
                             d = atoi(dpart);
-                            d += (n % 100) * 10000 / 60;
-                            n /= 100;
-                            latitude = n * 100000 + d;
+                            integer = n / 100;
+                            decimal = ((n % 100) * 1000000 + d)/60;
+                            latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
 
 
                             idx = 0;
@@ -91,23 +95,24 @@ public:
                             break;
 
                         case 6: // longitude direction
-
                             londir = (c == 'E');
+
                             strcpy(npart, strtok(buffer, "."));
                             strcpy(dpart, strtok(buffer, "."));
                             memset(buffer, 0, sizeof(buffer));
 
                             n = atoi(npart);
                             d = atoi(dpart);
-                            d += (n % 100) * 10000 / 60;
-                            n /= 100;
-                            longitude = n * 100000 + d;
+                            integer = n / 100;
+                            decimal = ((n % 100) * 1000000 + d)/60;
+                            longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
 
                             idx = 0;
                             commas = 0;
                             seq = 0;
-                            p->latitude = latitude * (latdir ? 1 : -1);
-                            p->longitude = longitude * (londir ? 1 : -1);
+
+                            p->latitude = latitude;
+                            p->longitude = longitude;
 
                             break;
 
