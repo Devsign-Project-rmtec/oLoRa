@@ -9,6 +9,16 @@ private:
     SoftwareSerial* s;
     Packet* p;
 
+    uint32_t atoui32(const char* str) {
+        uint32_t val = 0;
+        for(int i = 0; i < strlen(str); i++) {
+            val *= 10;
+            val += str[i] - '0';
+        }
+
+        return val;
+    }
+
 public:
     GPS_Processor(SoftwareSerial* hwSerial, Packet* packet) : s(hwSerial), p(packet) {
 
@@ -76,18 +86,21 @@ public:
                             latdir = (c == 'N');
 
                             strcpy(npart, strtok(buffer, "."));
-                            strcpy(dpart, strtok(buffer, "."));
+                            strcpy(dpart, strtok(NULL, "."));
                             memset(buffer, 0, sizeof(buffer));
 
-                            n = atoi(npart);
-                            d = atoi(dpart);
+                            n = atol(npart);
+                            d = atol(dpart);
+
                             integer = n / 100;
-                            decimal = ((n % 100) * 1000000 + d)/60;
+                            decimal = ((n % 100) * 100000 + d) * 0.1666667;
                             latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
 
 
                             idx = 0;
                             seq = 2; // inserted due to compiler bug
+
+
                             break;
 
                         case 5: // longitude string
@@ -98,13 +111,13 @@ public:
                             londir = (c == 'E');
 
                             strcpy(npart, strtok(buffer, "."));
-                            strcpy(dpart, strtok(buffer, "."));
+                            strcpy(dpart, strtok(NULL, "."));
                             memset(buffer, 0, sizeof(buffer));
 
-                            n = atoi(npart);
-                            d = atoi(dpart);
+                            n = atol(npart);
+                            d = atol(dpart);
                             integer = n / 100;
-                            decimal = ((n % 100) * 1000000 + d)/60;
+                            decimal = ((n % 100) * 100000 + d) * 0.1666667;
                             longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
 
                             idx = 0;
@@ -113,6 +126,7 @@ public:
 
                             p->latitude = latitude;
                             p->longitude = longitude;
+
 
                             break;
 
