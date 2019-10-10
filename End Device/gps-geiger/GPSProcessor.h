@@ -7,7 +7,7 @@
 
 class GPS_Processor {
 private:
-    SoftwareSerial* s;
+    HardwareSerial* s;
 
     struct GPSdata{
         int32_t latitude;
@@ -25,7 +25,7 @@ private:
     }
 
 public:
-    GPS_Processor(SoftwareSerial* hwSerial) : s(hwSerial) {
+    GPS_Processor(HardwareSerial* hwSerial) : s(hwSerial) {
 
     } 
 
@@ -46,7 +46,7 @@ public:
         // 0: $ not found
         // 1: looking for GPRMC
         // 2: parsing
-        static int8_t seq = 0;
+        static volatile int8_t seq = 0;
         static int8_t waitLength = 1;
         static int8_t commas = 0;
         static char buffer[15];
@@ -76,7 +76,6 @@ public:
             switch (seq) {
             case 0: // $ not found
                 c = s->read();
-                Serial.write(c);
                 if (c == '$'){
                     seq = 1;
                     waitLength = 5;
@@ -180,18 +179,18 @@ public:
 
                             setTime(time.hour, time.minute, time.second, time.day, time.month, time.year);
 
-                            Serial.print(time.hour);
-                            Serial.print(':');
-                            Serial.print(time.minute);
-                            Serial.print(':');
-                            Serial.print(time.second);
-                            Serial.print(' ');
-                            Serial.print(time.year);
-                            Serial.print('/');
-                            Serial.print(time.month);
-                            Serial.print('/');
-                            Serial.print(time.day);
-                            Serial.println();
+                            // Serial.print(time.hour);
+                            // Serial.print(':');
+                            // Serial.print(time.minute);
+                            // Serial.print(':');
+                            // Serial.print(time.second);
+                            // Serial.print(' ');
+                            // Serial.print(time.year);
+                            // Serial.print('/');
+                            // Serial.print(time.month);
+                            // Serial.print('/');
+                            // Serial.print(time.day);
+                            // Serial.println();
 
                             commas = 0;
                             seq = 0;

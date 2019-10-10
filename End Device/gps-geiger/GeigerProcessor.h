@@ -13,7 +13,7 @@ private:
 
 public:
     Geiger() {
-        analogReference(INTERNAL);
+        analogReference(INTERNAL1V1);
     }
 
     void impulse() {
@@ -38,8 +38,8 @@ public:
             cpm = 0;
             for(int i = 0; i < 6; i++) {
                 cpm += countArray[i];
-                //Serial.print(countArray[i]);
-                //Serial.print('\t');
+                Serial.print(countArray[i]);
+                Serial.print('\t');
             }
             //Serial.print(getCPM());
             //Serial.print('\t');

@@ -1,13 +1,12 @@
-#define GPS_SWSERIAL 1
+#define GPS_SWSERIAL 0
 
 #include "Time.h"
 
 #include <Wire.h>
-byte i2c_command = 0;
-enum {
-    DATA_GPS = 1,
-    DATA_TIME
-};
+#define DATA_GPS 0x01
+#define DATA_TIME 0x02
+#define DATA_USV 0x03
+volatile byte i2c_command = 0;
 
 #include "pin_definition.h"
 
@@ -15,7 +14,7 @@ enum {
 #include <SoftwareSerial.h>
 SoftwareSerial GPS(4, 5);
 #else
-#define GPS Serial
+#define GPS Serial1
 #endif
 
 #define I2C_ADDR 0x10
@@ -27,9 +26,9 @@ GeigerProcessor geiger;
 GPS_Processor gps(&GPS);
 
 void setup(){
-    Serial.begin(115200);
+    Serial.begin(9600);
     Serial.println("init");
-    analogReference(INTERNAL);
+    analogReference(INTERNAL1V1);
 
     // 4khz pwm
     // timer1 prescaler8 icr249
@@ -43,18 +42,18 @@ void setup(){
     GPS.begin(9600);
     Wire.begin(I2C_ADDR);
     pinMode(13, 1);
-    pinMode(9, 1);
+    pinMode(11, 1);
 
     attachInterrupt(digitalPinToInterrupt(GEIGER_INPUT), interrupt0, FALLING);
     OCR1A = 0;
     Wire.onReceive(I2C_Receive);
     Wire.onRequest(I2C_Request);
-
 }
 
 void loop(){
     geiger.task();
     gps.task();
+    //if(GPS.available()) Serial.write(GPS.read());
 }
 
 void interrupt0() {
@@ -63,30 +62,33 @@ void interrupt0() {
 
 void I2C_Receive(int nBytes) {
     i2c_command = Wire.read();
+    Serial.println(i2c_command);
 }
 
 void I2C_Request() {
     static uint8_t len;
     static byte *p;
-    switch(i2c_command) {
-        case DATA_GPS:
-            uint32_t lat = gps.getLatitude();
-            uint32_t lon = gps.getLongitude();
-            p = (byte *)malloc(sizeof(lat) + sizeof(lon));
-            memcpy(p, &lat, sizeof(lat));
-            memcpy(p + sizeof(lat), &lon, sizeof(lon));
+    if (i2c_command == DATA_GPS) {
+        uint32_t lat = gps.getLatitude();
+        uint32_t lon = gps.getLongitude();
+        p = (byte *)malloc(sizeof(lat) + sizeof(lon));
+        memcpy(p, &lat, sizeof(lat));
+        memcpy(p + sizeof(lat), &lon, sizeof(lon));
 
-            Wire.write(p, sizeof(lat) + sizeof(lon));
-            break;
-
-        case DATA_TIME:
-            time_t t = now();
-            p = reinterpret_cast<byte *>(&t);
-            Wire.write(p, sizeof(time_t));
-            break;
+        Wire.write(p, sizeof(lat) + sizeof(lon));
+    }
+    else if (i2c_command == DATA_TIME) {
+        time_t t = now();
+        p = reinterpret_cast<byte *>(&t);
+        Wire.write(p, sizeof(time_t));
+    }
+    else if (i2c_command == DATA_USV) {
+        uint16_t d = (uint16_t)(geiger.getUSV() * 100);
+        Serial.println(d);
+        p = reinterpret_cast<byte *>(&d);
+        Wire.write(p, sizeof(uint16_t));
     }
 }
-
 
 ISR(TIMER1_OVF_vect){
     t1ovf();
