@@ -9,8 +9,8 @@ void setup() {
     LoRa.begin(115200);
 
     packet.status = 0;
-    packet.latitude = (0UL << 31) | (35UL << 22) | (140121UL << 0);
-    packet.longitude = (0UL << 31) | (126UL << 22) | (940121UL << 0);
+    packet.latitude = (0UL << 31) | (35UL << 23) | (140121UL << 0);
+    packet.longitude = (0UL << 31) | (126UL << 23) | (940121UL << 0);
     packet.temperature = 2703;
     packet.humidity = 2412;
     packet.battery = 50;
