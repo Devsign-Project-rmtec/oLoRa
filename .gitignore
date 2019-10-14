@@ -498,4 +498,6 @@ End Device/packet-test/.vscode/*
 End Device/packet-test/.build/*
 End Device/main-MCU/.vscode/*
 End Device/main-MCU/.build/*
+End Device/LoRa-dump/.vscode/*
+End Device/LoRa-dump/.build/*
 blog/.deploy_git/
