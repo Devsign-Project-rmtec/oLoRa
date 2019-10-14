@@ -2,19 +2,14 @@
 #include "DFRobot_SHT20.h"
 #include <Wire.h>
 
-#include <HardwareSerial.h>
+#define LoRa Serial1
 
 MPU6050 imu; // I2C 0x68
 DFRobot_SHT20 sht20; // I2C 0x40
 
 void setup() {
     Serial.begin(115200);
-    sht20.initSHT20();
-    imu.initialize();
-    while(!Serial);
-    Serial.println(imu.testConnection());
-    sht20.checkSHT20();
-    delay(2000);
+    LoRa.begin(115200);
 }
 
 void loop() {
