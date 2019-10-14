@@ -13,7 +13,7 @@ private:
 
 public:
     Geiger() {
-        analogReference(INTERNAL1V1);
+        analogReference(INTERNAL);
     }
 
     void impulse() {
@@ -48,6 +48,15 @@ public:
             if(++countArrayIdx == 6) countArrayIdx = 0;
             countArray[countArrayIdx] = 0;
             task2Time = nowTime;
+        }
+    }
+
+    void adjHV() {
+        int val = analogRead(HV_INPUT);
+        if (val < 375) {
+            OCR1B = 1500;
+        } else {
+            OCR1B = 150;
         }
     }
 

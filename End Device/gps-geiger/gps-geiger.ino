@@ -14,7 +14,7 @@ volatile byte i2c_command = 0;
 #include <SoftwareSerial.h>
 SoftwareSerial GPS(4, 5);
 #else
-#define GPS Serial1
+#define GPS Serial
 #endif
 
 #define I2C_ADDR 0x10
@@ -28,24 +28,23 @@ GPS_Processor gps(&GPS);
 void setup(){
     Serial.begin(9600);
     Serial.println("init");
-    analogReference(INTERNAL1V1);
+    analogReference(INTERNAL);
 
     // 4khz pwm
-    // timer1 prescaler8 icr249
     cli();
-    TCCR1A = 1 << COM1A1 | 0 << COM1A0 | 1 << WGM11 | 0 << WGM10; // Mode 14: Fast PWM / TOP: ICR1 / Update of OCR1x at BOTTOM
+    TCCR1A = 1 << COM1B1 | 0 << COM1B0 | 1 << WGM11 | 0 << WGM10; // Mode 14: Fast PWM / TOP: ICR1 / Update of OCR1x at BOTTOM
     TCCR1B = 1 << WGM13 | 1 << WGM12 | 1 << CS10; 
-    TIMSK1 |= 1 << TOIE1; // use pin 10 as pwm output
+    TIMSK1 |= 1 << TOIE1;
     ICR1 = 1999;
     sei();
 
     GPS.begin(9600);
     Wire.begin(I2C_ADDR);
     pinMode(13, 1);
-    pinMode(11, 1);
+    pinMode(HV_CTRL, 1);
 
     attachInterrupt(digitalPinToInterrupt(GEIGER_INPUT), interrupt0, FALLING);
-    OCR1A = 0;
+    OCR1B = 0;
     Wire.onReceive(I2C_Receive);
     Wire.onRequest(I2C_Request);
 }
@@ -91,20 +90,9 @@ void I2C_Request() {
 }
 
 ISR(TIMER1_OVF_vect){
-    t1ovf();
+    geiger.adjHV();
 }
 
-void t1ovf(){
-    // 400V -> 375
-    // 226, 430+a
-    int val = analogRead(HV_INPUT);
-    if(val < 375) {
-        OCR1A = 1500;
-    }
-    else {
-        OCR1A = 150;
-    }
-}
 
 // // run every 5ms
 // void HVcontroller(){
