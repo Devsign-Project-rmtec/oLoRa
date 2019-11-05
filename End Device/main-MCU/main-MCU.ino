@@ -2,14 +2,18 @@
 #include "DFRobot_SHT20.h"
 #include <Wire.h>
 
+#include "oLoRa-GPS-Geiger.h"
+
 #define LoRa Serial1
 
 MPU6050 imu; // I2C 0x68
 DFRobot_SHT20 sht20; // I2C 0x40
+oLoRa_GPS_Geiger cop;
 
 void setup() {
     Serial.begin(115200);
     LoRa.begin(115200);
+    Wire.begin();
 }
 
 void loop() {
@@ -22,12 +26,7 @@ void loop() {
     // Serial.print(z);
     // Serial.println();
     // delay(10);
-    float t, h;
-    t = sht20.readTemperature();
-    h = sht20.readHumidity();
-    Serial.print(t);
-    Serial.print('\t');
-    Serial.print(h);
-    Serial.println();
-    delay(100);
+    cop.updateData();
+    Serial.println(cop.getLatitude());
+    delay(1000);
 }

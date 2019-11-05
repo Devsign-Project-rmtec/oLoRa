@@ -6,6 +6,7 @@
 #define DATA_GPS 0x01
 #define DATA_TIME 0x02
 #define DATA_USV 0x03
+#define DATA_ALL 0x04
 volatile byte i2c_command = 0;
 
 #include "pin_definition.h"
@@ -86,6 +87,16 @@ void I2C_Request() {
         Serial.println(d);
         p = reinterpret_cast<byte *>(&d);
         Wire.write(p, sizeof(uint16_t));
+    }
+    else if (i2c_command == DATA_ALL) {
+        struct {
+            uint32_t lat = gps.getLatitude();
+            uint32_t lon = gps.getLongitude();
+            time_t t = now();
+            uint16_t d = (uint16_t)(geiger.getUSV() * 100);
+        } packet;
+        p = reinterpret_cast<byte *>(&packet);
+        Wire.write(p, sizeof(packet));
     }
 }
 
