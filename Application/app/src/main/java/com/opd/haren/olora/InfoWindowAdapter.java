@@ -42,6 +42,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         InfoWindowData info = (InfoWindowData) marker.getTag();
 
+        @SuppressWarnings("ConstantConditions")
         int battery = (int) info.getLastData(5);
         Drawable drawable;
         if (battery >= 100)
