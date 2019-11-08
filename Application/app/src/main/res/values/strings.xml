@@ -1,0 +1,19 @@
+<resources>
+    <string name="AppName">oLoRa</string>
+    <string name="DefaultValue">00.00</string>
+    <string name="DefaultBattery">100%</string>
+    <string name="Unit">μSv/h</string>
+    <string name="Title">제목</string>
+    <string name="Content">내용</string>
+    <string name="Button">버튼</string>
+    <string name="Network1">인터넷에 연결되어 있지 않습니다</string>
+    <string name="Network2">네트워크 연결 상태를 확인해주세요</string>
+    <string name="Error1">오류가 발생했습니다</string>
+    <string name="Error2">잠시 후 다시 시도해주세요\n\n%s</string>
+    <string name="Exit">종료</string>
+    <string name="Kill">kill</string>
+    <string name="Loading">데이터를 불러오고 있습니다&#8230;</string>
+    <string name="SampleCount">0</string>
+    <string name="SampleEUI">0000000000000000</string>
+    <string name="EUI">EUI</string>
+</resources>
