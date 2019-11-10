@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     final int YELLOW = 50;
     final int GREEN = 120;
 
-    final long refreshTime = 5000;
+    final long refreshTime = 60000;
 
     Animation fab_open, fab_close;
     Boolean[] isFabOpen = {false, false, false, false};
@@ -313,12 +313,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 marker = data.marker;
                                                 if (marker.getTitle().equals(eui)) {
                                                     boolean shown = marker.isInfoWindowShown();
-                                                    if (shown) marker.hideInfoWindow();
                                                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(color));
                                                     marker.setTag(info);
                                                     marker.setVisible(!isFabOpen[colorCheck(color)]);
                                                     data.color = color;
-                                                    if (shown) marker.showInfoWindow();
+                                                    if (shown) {
+                                                        marker.hideInfoWindow();
+                                                        marker.showInfoWindow();
+                                                    }
                                                     break;
                                                 }
                                             }
