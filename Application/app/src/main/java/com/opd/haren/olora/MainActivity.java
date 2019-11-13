@@ -80,17 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         warningFab.setOnClickListener(this);
         dangerFab.setOnClickListener(this);
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressWarnings("ConstantConditions")
-        Network activeNetwork = cm.getActiveNetwork();
-        if (activeNetwork == null) {
-            createPopup(mContext,
-                    getString(R.string.Network1),
-                    getString(R.string.Network2),
-                    getString(R.string.Exit),
-                    getString(R.string.Kill)
-            );
-        } else {
+        if (isConnected()) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
@@ -189,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void anim() {
+    void anim() {
         if (isFabOpen[0]) {
             safeFab.startAnimation(fab_close);
             warningFab.startAnimation(fab_close);
@@ -209,140 +199,160 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    void refreshEUI() {
-        try {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Document doc;
-                    try {
-                        doc = Jsoup.connect("http://devsign.co.kr:8081/api/internal/login")
-                                .requestBody("{\"username\":\"" + getString(R.string.EUI_Username) + "\",\"password\":\"" + getString(R.string.Password) + "\"}")
-                                .ignoreContentType(true)
-                                .post();
-                        jwt = new JSONObject(doc.text()).getString("jwt");
-                        doc = Jsoup.connect("http://devsign.co.kr:8081/api/devices?limit=100")
-                                .header("Grpc-Metadata-Authorization", "Bearer " + jwt)
-                                .ignoreContentType(true)
-                                .get();
-                        JSONArray result = new JSONObject(doc.text()).getJSONArray("result");
-                        euiList.clear();
-                        for (int i = 0; i < result.length(); i++)
-                            euiList.add(result.getJSONObject(i).getString("devEUI"));
+    boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressWarnings("ConstantConditions")
+        Network activeNetwork = cm.getActiveNetwork();
+        if (activeNetwork == null) {
+            refreshHandler.removeMessages(0);
+            createPopup(mContext,
+                    getString(R.string.Network1),
+                    getString(R.string.Network2),
+                    getString(R.string.Exit),
+                    getString(R.string.Kill)
+            );
+        }
+        return activeNetwork != null;
+    }
 
-                        for (final MarkerData data : markerList) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (euiList.indexOf(data.marker.getTitle()) == -1)
-                                        data.marker.remove();
-                                }
-                            });
+    void refreshEUI() {
+        if (isConnected()) {
+            try {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Document doc;
+                        try {
+                            doc = Jsoup.connect("http://devsign.co.kr:8081/api/internal/login")
+                                    .requestBody("{\"username\":\"" + getString(R.string.EUI_Username) + "\",\"password\":\"" + getString(R.string.Password) + "\"}")
+                                    .ignoreContentType(true)
+                                    .post();
+                            jwt = new JSONObject(doc.text()).getString("jwt");
+                            doc = Jsoup.connect("http://devsign.co.kr:8081/api/devices?limit=100")
+                                    .header("Grpc-Metadata-Authorization", "Bearer " + jwt)
+                                    .ignoreContentType(true)
+                                    .get();
+                            JSONArray result = new JSONObject(doc.text()).getJSONArray("result");
+                            euiList.clear();
+                            for (int i = 0; i < result.length(); i++)
+                                euiList.add(result.getJSONObject(i).getString("devEUI"));
+
+                            for (final MarkerData data : markerList) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (euiList.indexOf(data.marker.getTitle()) == -1)
+                                            data.marker.remove();
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            err(e);
                         }
-                    } catch (Exception e) {
-                        err(e);
                     }
-                }
-            });
-            thread.start();
-            thread.join();
-        } catch (Exception e) {
-            err(e);
+                });
+                thread.start();
+                thread.join();
+            } catch (Exception e) {
+                err(e);
+            }
         }
     }
 
     void setMarker(final boolean update) {
-        try {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        refreshEUI();
-                        for (final String eui : euiList) {
-                            Thread innerThread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        doc = Jsoup.connect("http://devsign.co.kr:8083/query?u=" + getString(R.string.DB_Username) + "&p=" + getString(R.string.Password) + "&db=loradb&q=select%20time%2cdev_eui%2cvalue%20from%20device_frmpayload_data_node0%20where%20dev_eui%3d%27" + eui + "%27%20order%20by%20time%20desc%20limit%2010").ignoreContentType(true).get();
-                                    } catch (Exception e) {
-                                        err(e);
-                                    }
-                                }
-                            });
-                            innerThread.start();
-                            innerThread.join();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        JSONArray values = new JSONObject(doc.text())
-                                                .getJSONArray("results")
-                                                .getJSONObject(0)
-                                                .getJSONArray("series")
-                                                .getJSONObject(0)
-                                                .getJSONArray("values");
-
-                                        ArrayList<AttrData> attrList = new ArrayList<>();
-                                        for (int i = 0; i < values.length(); i++) {
-                                            JSONArray arr = values.getJSONArray(i);
-                                            attrList.add(new AttrData(arr.get(0).toString(), arr.get(2).toString()));
+        if (isConnected()) {
+            try {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            refreshEUI();
+                            for (final String eui : euiList) {
+                                Thread innerThread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            doc = Jsoup.connect("http://devsign.co.kr:8083/query?u=" + getString(R.string.DB_Username) + "&p=" + getString(R.string.Password) + "&db=loradb&q=select%20time%2cdev_eui%2cvalue%20from%20device_frmpayload_data_node0%20where%20dev_eui%3d%27" + eui + "%27%20order%20by%20time%20desc%20limit%2010").ignoreContentType(true).get();
+                                        } catch (Exception e) {
+                                            err(e);
                                         }
+                                    }
+                                });
+                                innerThread.start();
+                                innerThread.join();
 
-                                        InfoWindowData info = new InfoWindowData();
-                                        info.setAttrList(attrList);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            JSONArray values = new JSONObject(doc.text())
+                                                    .getJSONArray("results")
+                                                    .getJSONObject(0)
+                                                    .getJSONArray("series")
+                                                    .getJSONObject(0)
+                                                    .getJSONArray("values");
 
-                                        int color = 0;
-                                        float rad = (float) (Math.round(info.getLastData(6) * 100d) / 100d);
-                                        if (rad >= RadDanger) color = RED;
-                                        else if (rad < RadDanger && rad >= RadWarning)
-                                            color = YELLOW;
-                                        else if (rad < RadWarning) color = GREEN;
-
-                                        InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(MainActivity.this);
-                                        mMap.setInfoWindowAdapter(infoWindowAdapter);
-
-                                        MarkerOptions markerOptions = new MarkerOptions();
-                                        markerOptions.position(new LatLng(info.getLastData(1), info.getLastData(2)));
-                                        markerOptions.title(eui);
-                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(color));
-
-                                        Marker marker;
-                                        if (update) {
-                                            for (MarkerData data : markerList) {
-                                                marker = data.marker;
-                                                if (marker.getTitle().equals(eui)) {
-                                                    boolean shown = marker.isInfoWindowShown();
-                                                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(color));
-                                                    marker.setTag(info);
-                                                    marker.setVisible(!isFabOpen[colorCheck(color)]);
-                                                    data.color = color;
-                                                    if (shown) {
-                                                        marker.hideInfoWindow();
-                                                        marker.showInfoWindow();
-                                                    }
-                                                    break;
-                                                }
+                                            ArrayList<AttrData> attrList = new ArrayList<>();
+                                            for (int i = 0; i < values.length(); i++) {
+                                                JSONArray arr = values.getJSONArray(i);
+                                                attrList.add(new AttrData(arr.get(0).toString(), arr.get(2).toString()));
                                             }
-                                        } else {
-                                            marker = mMap.addMarker(markerOptions);
-                                            marker.setTag(info);
-                                            markerList.add(new MarkerData(marker, color));
+
+                                            InfoWindowData info = new InfoWindowData();
+                                            info.setAttrList(attrList);
+
+                                            int color = 0;
+                                            float rad = (float) (Math.round(info.getLastData(6) * 100d) / 100d);
+                                            if (rad >= RadDanger) color = RED;
+                                            else if (rad < RadDanger && rad >= RadWarning)
+                                                color = YELLOW;
+                                            else if (rad < RadWarning) color = GREEN;
+
+                                            InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(MainActivity.this);
+                                            mMap.setInfoWindowAdapter(infoWindowAdapter);
+
+                                            MarkerOptions markerOptions = new MarkerOptions();
+                                            markerOptions.position(new LatLng(info.getLastData(1), info.getLastData(2)));
+                                            markerOptions.title(eui);
+                                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(color));
+
+                                            Marker marker;
+                                            if (update) {
+                                                for (MarkerData data : markerList) {
+                                                    marker = data.marker;
+                                                    if (marker.getTitle().equals(eui)) {
+                                                        boolean shown = marker.isInfoWindowShown();
+                                                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(color));
+                                                        marker.setTag(info);
+                                                        marker.setVisible(!isFabOpen[colorCheck(color)]);
+                                                        data.color = color;
+                                                        if (shown) {
+                                                            marker.hideInfoWindow();
+                                                            marker.showInfoWindow();
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+                                                marker = mMap.addMarker(markerOptions);
+                                                marker.setTag(info);
+                                                markerList.add(new MarkerData(marker, color));
+                                            }
+                                        } catch (Exception e) {
+                                            err(e);
                                         }
-                                    } catch (Exception e) {
-                                        err(e);
                                     }
-                                }
-                            });
+                                });
+                            }
+                        } catch (Exception e) {
+                            err(e);
                         }
-                    } catch (Exception e) {
-                        err(e);
                     }
-                }
-            });
-            thread.start();
-        } catch (Exception e) {
-            err(e);
+                });
+                thread.start();
+            } catch (Exception e) {
+                err(e);
+            }
         }
     }
 

@@ -6,7 +6,7 @@
     <string name="Title">제목</string>
     <string name="Content">내용</string>
     <string name="Button">버튼</string>
-    <string name="Network1">인터넷에 연결되어 있지 않습니다</string>
+    <string name="Network1">인터넷 연결 실패!</string>
     <string name="Network2">네트워크 연결 상태를 확인해주세요</string>
     <string name="Error1">오류가 발생했습니다</string>
     <string name="Error2">잠시 후 다시 시도해주세요\n\n%s</string>
