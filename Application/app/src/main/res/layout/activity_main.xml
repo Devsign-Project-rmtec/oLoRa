@@ -25,7 +25,7 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.andremion.counterfab.CounterFab
                 android:id="@+id/dangerFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_danger" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.andremion.counterfab.CounterFab
                 android:id="@+id/warningFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_warning" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.andremion.counterfab.CounterFab
                 android:id="@+id/safeFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_safe" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.andremion.counterfab.CounterFab
                 android:id="@+id/mainFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

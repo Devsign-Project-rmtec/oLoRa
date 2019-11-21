@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.andremion.counterfab.CounterFab;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     Animation fab_open, fab_close;
     Boolean[] isFabOpen = {false, false, false, false};
-    FloatingActionButton mainFab, safeFab, warningFab, dangerFab;
+    CounterFab mainFab, safeFab, warningFab, dangerFab;
 
     Handler fabHandler = new Handler();
     Handler refreshHandler = new Handler();
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 anim();
                 for (MarkerData markerData : markerList)
                     if (markerData.color == GREEN) markerData.marker.setVisible(isFabOpen[1]);
-                findViewById(R.id.safeFab).setBackgroundTintList(isFabOpen[1] ? accent : gray);
+                safeFab.setBackgroundTintList(isFabOpen[1] ? accent : gray);
                 isFabOpen[1] = !isFabOpen[1];
                 break;
 
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 anim();
                 for (MarkerData markerData : markerList)
                     if (markerData.color == YELLOW) markerData.marker.setVisible(isFabOpen[2]);
-                findViewById(R.id.warningFab).setBackgroundTintList(isFabOpen[2] ? accent : gray);
+                warningFab.setBackgroundTintList(isFabOpen[2] ? accent : gray);
                 isFabOpen[2] = !isFabOpen[2];
                 break;
 
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 anim();
                 for (MarkerData markerData : markerList)
                     if (markerData.color == RED) markerData.marker.setVisible(isFabOpen[3]);
-                findViewById(R.id.dangerFab).setBackgroundTintList(isFabOpen[3] ? accent : gray);
+                dangerFab.setBackgroundTintList(isFabOpen[3] ? accent : gray);
                 isFabOpen[3] = !isFabOpen[3];
                 break;
         }
@@ -267,6 +268,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void run() {
                         try {
                             refreshEUI();
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    safeFab.setCount(0);
+                                    warningFab.setCount(0);
+                                    dangerFab.setCount(0);
+                                }
+                            });
+
                             for (final String eui : euiList) {
                                 Thread innerThread = new Thread(new Runnable() {
                                     @Override
@@ -315,6 +326,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             markerOptions.position(new LatLng(info.getLastData(1), info.getLastData(2)));
                                             markerOptions.title(eui);
                                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(color));
+
+                                            switch (colorCheck(color)) {
+                                                case 1:
+                                                    safeFab.increase();
+                                                    break;
+
+                                                case 2:
+                                                    warningFab.increase();
+                                                    break;
+
+                                                case 3:
+                                                    dangerFab.increase();
+                                                    break;
+                                            }
 
                                             Marker marker;
                                             if (update) {
