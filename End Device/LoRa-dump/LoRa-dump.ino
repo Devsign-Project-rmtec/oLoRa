@@ -9,22 +9,28 @@ void setup() {
     LoRa.begin(115200);
 
     packet.status = 0;
-    packet.latitude = (0UL << 31) | (35UL << 23) | (140121UL << 0);
-    packet.longitude = (0UL << 31) | (126UL << 23) | (940121UL << 0);
+    packet.latitude = (0UL << 31) | (35UL << 23) | (540121UL << 0);
+    packet.longitude = (0UL << 31) | (127UL << 23) | (340121UL << 0);
     packet.temperature = 2703;
     packet.humidity = 2412;
     packet.battery = 50;
     packet.radiation = 25;
+
+    randomSeed(analogRead(0));
 }
 
 void loop() {
     send_packet(&LoRa);
-    packet.debug(&Serial);
-    delay(4000);
 }
 
 void send_packet(HardwareSerial* s) {
     static long oldTime = 0;
+
+    packet.radiation = random(10, 500);
+    packet.battery = random(0, 100);
+
+    packet.debug(&Serial);
+
     long nowTime = millis();
     if(nowTime - oldTime > 4000){
         s->print("at+send=lora:2:");
