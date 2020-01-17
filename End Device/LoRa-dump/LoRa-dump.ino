@@ -6,15 +6,15 @@ Packet packet;
 
 void setup() {
     Serial.begin(115200);
-    LoRa.begin(115200);
+    LoRa.begin(38400);
 
     packet.status = 0;
-    packet.latitude = (0UL << 31) | (35UL << 23) | (540121UL << 0);
-    packet.longitude = (0UL << 31) | (127UL << 23) | (340121UL << 0);
-    packet.temperature = 2703;
-    packet.humidity = 2412;
-    packet.battery = 50;
-    packet.radiation = 25;
+    packet.latitude = (0UL << 31) | (35UL << 23) | (549211UL << 0);
+    packet.longitude = (0UL << 31) | (127UL << 23) | (390888UL << 0);
+    packet.temperature = 2521;
+    packet.humidity = 5454;
+    packet.battery = 75;
+    packet.radiation = 75;
 
     randomSeed(analogRead(0));
 }
