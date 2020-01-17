@@ -26,6 +26,9 @@ GeigerProcessor geiger;
 #include "GPSProcessor.h"
 GPS_Processor gps(&GPS);
 
+#include "container.h"
+Container container;
+
 void setup(){
     Serial.begin(9600);
     Serial.println("init");
@@ -69,8 +72,8 @@ void I2C_Request() {
     static uint8_t len;
     static byte *p;
     if (i2c_command == DATA_GPS) {
-        uint32_t lat = gps.getLatitude();
-        uint32_t lon = gps.getLongitude();
+        double lat = gps.getLatitude();
+        double lon = gps.getLongitude();
         p = (byte *)malloc(sizeof(lat) + sizeof(lon));
         memcpy(p, &lat, sizeof(lat));
         memcpy(p + sizeof(lat), &lon, sizeof(lon));
@@ -89,14 +92,22 @@ void I2C_Request() {
         Wire.write(p, sizeof(uint16_t));
     }
     else if (i2c_command == DATA_ALL) {
-        struct {
-            uint32_t lat = gps.getLatitude();
-            uint32_t lon = gps.getLongitude();
-            time_t t = now();
-            uint16_t d = (uint16_t)(geiger.getUSV() * 100);
-        } packet;
-        p = reinterpret_cast<byte *>(&packet);
-        Wire.write(p, sizeof(packet));
+        Container c;
+        // c.latitude = gps.getLatitude();
+        // c.longitude = gps.getLongitude();
+        // c.time = now();
+        // c.geiger = geiger.getUSV();
+        uint64_t da = 0x1111111111111111;
+        uint64_t db = 0x2222222222222222;
+        uint32_t dc = 0x33333333;
+        uint32_t dd = 0x44444444;
+        memcpy((uint8_t *) &c.latitude, (uint8_t *)&da, 8);
+        memcpy((uint8_t *) &c.longitude, (uint8_t *)&db, 8);
+        memcpy((uint8_t *) &c.time, (uint8_t *)&dc, 4);
+        memcpy((uint8_t *) &c.geiger, (uint8_t *)&dd, 4);
+
+        p = reinterpret_cast<byte *>(&c);
+        Wire.write(p, 24);
     }
 }
 

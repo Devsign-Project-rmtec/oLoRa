@@ -11,8 +11,8 @@ private:
     HardwareSerial* s;
 
     struct GPSdata{
-        int32_t latitude;
-        int32_t longitude;
+        double latitude = 0;
+        double longitude = 0;
     } data;
 
     uint32_t atoui32(const char* str) {
@@ -27,14 +27,14 @@ private:
 
 public:
     GPS_Processor(HardwareSerial* hwSerial) : s(hwSerial) {
-
+        setTime(0);
     } 
 
-    int32_t getLatitude() {
+    double getLatitude() {
         return data.latitude;
     }
 
-    int32_t getLongitude() {
+    double getLongitude() {
         return data.longitude;
     }
 
@@ -126,17 +126,19 @@ public:
                         case 4: // latitude direction
                             latdir = (c == 'N');
 
-                            strcpy(npart, strtok(buffer, "."));
-                            strcpy(dpart, strtok(NULL, "."));
-                            memset(buffer, 0, sizeof(buffer));
+                            //strcpy(npart, strtok(buffer, "."));
+                            //strcpy(dpart, strtok(NULL, "."));
+                            // memset(buffer, 0, sizeof(buffer));
                             idx = 0;
 
-                            n = atol(npart);
-                            d = atol(dpart);
+                            //n = atol(npart);
+                            //d = atol(dpart);
 
-                            integer = n / 100;
-                            decimal = ((n % 100) * 100000 + d) * 0.1666667;
-                            latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
+                            //integer = n / 100;
+                            //decimal = ((n % 100) * 100000 + d) * 0.1666667;
+                            //latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
+                            data.latitude = atof(String(buffer).c_str());
+                            memset(buffer, 0, sizeof(buffer));
 
                             seq = 2; // inserted due to compiler bug
                             break;
@@ -148,19 +150,20 @@ public:
                         case 6: // longitude direction
                             londir = (c == 'E');
 
-                            strcpy(npart, strtok(buffer, "."));
-                            strcpy(dpart, strtok(NULL, "."));
-                            memset(buffer, 0, sizeof(buffer));
+                            //strcpy(npart, strtok(buffer, "."));
+                            //strcpy(dpart, strtok(NULL, "."));
+                            //memset(buffer, 0, sizeof(buffer));
                             idx = 0;
 
-                            n = atol(npart);
-                            d = atol(dpart);
-                            integer = n / 100;
-                            decimal = ((n % 100) * 100000 + d) * 0.1666667;
-                            longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
-
-                            data.latitude = latitude;
-                            data.longitude = longitude;
+                            //n = atol(npart);
+                            //d = atol(dpart);
+                            //integer = n / 100;
+                            //decimal = ((n % 100) * 100000 + d) * 0.1666667;
+                            //longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
+                            data.longitude = atof(String(buffer).c_str());
+                            memset(buffer, 0, sizeof(buffer));
+                            //data.latitude = latitude;
+                            //data.longitude = longitude;
 
 
                             break;

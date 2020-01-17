@@ -6,6 +6,8 @@
 
 #include "Time.h"
 
+#include "container.h"
+
 #define COPROCESSOR_ADDR 0x10
 #define DATA_GPS 0x01
 #define DATA_TIME 0x02
@@ -23,53 +25,43 @@ private:
     double longitude = 0;
     float geiger = 0;
 
+    Container c;
+
 public: 
     oLoRa_GPS_Geiger() {
         
     }
 
     void updateData() {
-        struct {
-            uint32_t lat;
-            uint32_t lon;
-            time_t t;
-            uint16_t d;
-        } packet;
-        byte rcv[sizeof(packet)];
-
         Wire.beginTransmission(COPROCESSOR_ADDR);
-        Wire.write(DATA_ALL);
+        Wire.write(DATA_GPS);
         Wire.endTransmission();
-        Wire.requestFrom(0x10, sizeof(packet));
-        Wire.readBytes(rcv, sizeof(packet));
-        Wire.endTransmission();
-
-        memcpy(&packet, rcv, sizeof(packet));
-        memcpy(&latitude_raw, &packet.lat, sizeof(uint32_t));
-        memcpy(&longitude_raw, &packet.lon, sizeof(uint32_t));
-        memcpy(&t, &packet.t, sizeof(time_t));
-        memcpy(&geiger_raw, &packet.d, sizeof(uint16_t));
+        Wire.requestFrom(COPROCESSOR_ADDR, 24);
+        while(Wire.available() < 24);
+        // Wire.readBytes((uint8_t *)&c, 24);
+        while(Wire.available()) {
+            Serial.print(Wire.read(), HEX);
+            Serial.print(' ');
+        }
+        Serial.println();
     }
     
     double getLatitude() {
-        bool s = latitude_raw >> 31 & 0x80000000;
-        uint8_t i = (latitude_raw & 0x7F800000) >> 23;
-        uint32_t d = (longitude_raw & 0x007FFFFF);
-        latitude = (s ? -1 : 1) * (i + (double)d / 1000000);
-        return latitude;
+        return c.latitude;
     }
 
     double getLongitude() {
-        bool s = longitude_raw >> 31 & 0x80000000;
-        uint8_t i = (longitude_raw & 0x7F800000) >> 23;
-        uint32_t d = (longitude_raw & 0x007FFFFF);
-        longitude = (s ? -1 : 1) * (i + (double)d / 1000000);
-        return longitude;
+        return c.longitude;
     }
 
     time_t getTime() {
-        return t;
+        return c.time;
     }
 
-};
+    float getUSV() {
+        return c.geiger;
+    }
 
+    
+
+};
