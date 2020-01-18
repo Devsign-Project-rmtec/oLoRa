@@ -224,12 +224,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void run() {
                         Document doc;
                         try {
-                            doc = Jsoup.connect("http://devsign.co.kr:8081/api/internal/login")
+                            doc = Jsoup.connect("http://habitat.factoryal.com:6080/api/internal/login")
                                     .requestBody("{\"username\":\"" + getString(R.string.EUI_Username) + "\",\"password\":\"" + getString(R.string.Password) + "\"}")
                                     .ignoreContentType(true)
                                     .post();
                             jwt = new JSONObject(doc.text()).getString("jwt");
-                            doc = Jsoup.connect("http://devsign.co.kr:8081/api/devices?limit=100")
+                            doc = Jsoup.connect("http://habitat.factoryal.com:6080/api/devices?limit=100")
                                     .header("Grpc-Metadata-Authorization", "Bearer " + jwt)
                                     .ignoreContentType(true)
                                     .get();
@@ -279,11 +279,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             });
 
                             for (final String eui : euiList) {
+                                if (eui.compareTo("0efb0903a2c6cca9") == 0) continue;
                                 Thread innerThread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         try {
-                                            doc = Jsoup.connect("http://devsign.co.kr:8083/query?u=" + getString(R.string.DB_Username) + "&p=" + getString(R.string.Password) + "&db=loradb&q=select%20time%2cdev_eui%2cvalue%20from%20device_frmpayload_data_node0%20where%20dev_eui%3d%27" + eui + "%27%20order%20by%20time%20desc%20limit%2010").ignoreContentType(true).get();
+                                            doc = Jsoup.connect("http://habitat.factoryal.com:6086/query?u=" + getString(R.string.DB_Username) + "&p=" + getString(R.string.Password) + "&db=olora&q=select%20time%2cdev_eui%2cvalue%20from%20device_frmpayload_data_node0%20where%20dev_eui%3d%27" + eui + "%27%20order%20by%20time%20desc%20limit%2010").ignoreContentType(true).get();
                                         } catch (Exception e) {
                                             err(e);
                                         }
