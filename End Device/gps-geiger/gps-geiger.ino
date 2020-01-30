@@ -30,8 +30,8 @@ GPS_Processor gps(&GPS);
 Container container;
 
 void setup(){
-    Serial.begin(9600);
-    Serial.println("init");
+    //Serial.begin(9600);
+    //Serial.println("init");
     analogReference(INTERNAL);
 
     // 4khz pwm
@@ -65,12 +65,13 @@ void interrupt0() {
 
 void I2C_Receive(int nBytes) {
     i2c_command = Wire.read();
-    Serial.println(i2c_command);
+    //Serial.println(i2c_command);
 }
 
 void I2C_Request() {
     static uint8_t len;
     static byte *p;
+    static Container c;
     if (i2c_command == DATA_GPS) {
         double lat = gps.getLatitude();
         double lon = gps.getLongitude();
@@ -87,24 +88,23 @@ void I2C_Request() {
     }
     else if (i2c_command == DATA_USV) {
         uint16_t d = (uint16_t)(geiger.getUSV() * 100);
-        Serial.println(d);
+        //Serial.println(d);
         p = reinterpret_cast<byte *>(&d);
         Wire.write(p, sizeof(uint16_t));
     }
     else if (i2c_command == DATA_ALL) {
-        Container c;
         // c.latitude = gps.getLatitude();
         // c.longitude = gps.getLongitude();
         // c.time = now();
         // c.geiger = geiger.getUSV();
-        uint64_t da = 0x1111111111111111;
-        uint64_t db = 0x2222222222222222;
-        uint32_t dc = 0x33333333;
-        uint32_t dd = 0x44444444;
+        uint64_t da = 0x1011121314151617;
+        uint64_t db = 0x2021222324252627;
+        uint32_t dc = 0x30313233;
+        uint32_t dd = 0x40414243;
         memcpy((uint8_t *) &c.latitude, (uint8_t *)&da, 8);
-        memcpy((uint8_t *) &c.longitude, (uint8_t *)&db, 8);
-        memcpy((uint8_t *) &c.time, (uint8_t *)&dc, 4);
-        memcpy((uint8_t *) &c.geiger, (uint8_t *)&dd, 4);
+        memcpy((uint8_t *) &c.latitude+8, (uint8_t *)&db, 8);
+        memcpy((uint8_t *) &c.latitude+16, (uint8_t *)&dc, 4);
+        memcpy((uint8_t *) &c.latitude+20, (uint8_t *)&dd, 4);
 
         p = reinterpret_cast<byte *>(&c);
         Wire.write(p, 24);
