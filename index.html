@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>Project oLoRa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Project oLoRa">
+<meta property="og:url" content="https://Devsign-Project-rmtec.github.io/index.html">
+<meta property="og:site_name" content="Project oLoRa">
+<meta property="og:locale" content="ko">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Project oLoRa">
+  
+    <link rel="alternative" href="/atom.xml" title="Project oLoRa" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/oLoRa/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/Devsign-Project-rmtec/oLoRa"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">Project oLoRa</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/oLoRa/">Home</a>
+      
+        <a class="main-nav-link" href="/oLoRa/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/oLoRa/about">About</a>
+      
+      <a class="main-nav-link st-search-show-outputs">Search</a>
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main">
+  
+    <article id="post-LoRa Server에서 ChirpStack으로 마이그레이션" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/" class="article-date">
+  <time datetime="2020-01-17T07:39:43.000Z" itemprop="datePublished">2020-01-17</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/">LoRa Server에서 ChirpStack으로 마이그레이션</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.<br><a href="https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473" target="_blank" rel="noopener">https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473</a></p>
+<p>이에 따라 진행하던 프로젝트에 대한 수정사항</p>
+<ul>
+<li><p>Repository 등록</p>
+<figure class="highlight plain"><figcaption><span>apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1CE2AFD36DBCCA00</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo echo &quot;deb https://artifacts.chirpstack.io/packages/3.x/deb stable main&quot; | sudo tee /etc/apt/sources.list.d/chirpstack.list</span><br><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Gateway Bridge 설치<br><code>lora-gateway-bridge</code> 에서 <code>chirpstack-gateway-bridge</code> 로 패키지 이름 변경됨</p>
+<figure class="highlight plain"><figcaption><span>apt-get install chirpstack-gateway-bridge```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">* Network Server 설치</span><br><span class="line">`loraserver` 에서 `chirpstack-network-server` 로 패키지 이름 변경됨</span><br><span class="line">```sudo apt-get install chirpstack-network-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Application Server 설치<br><code>lora-app-server</code> 에서 <code>chirpstack-application-server</code> 로 패키지 이름 변경됨<br><code>sudo apt-get install chirpstack-application-server</code></p>
+</li>
+</ul>
+<p>기타 파일 이름에 대한 변경사항이 모두 수정되었음</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/" data-id="ck61v9e9i000ehkuz272zcmjt" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-모니터링용 안드로이드 어플 제작" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/" class="article-date">
+  <time datetime="2019-10-29T05:58:52.000Z" itemprop="datePublished">2019-10-29</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/">모니터링용 안드로이드 어플 제작</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>LoRa 단말기로부터 저장된 데이터를 확인할 수 있다.<br>데이터베이스 서버에 저장된 로그를 읽어온 후 시각적으로 표시한다.</p>
+<p>SDK 17 이상 지원 기기에서 작동하며, Android Studio 3.4.2에서 개발되었다.<br>오픈소스 라이브러리는 jsoup, MPAndroidChart를 활용했다.</p>
+<h2 id="EUI-목록-갱신에-사용되는-함수"><a href="#EUI-목록-갱신에-사용되는-함수" class="headerlink" title="EUI 목록 갱신에 사용되는 함수"></a>EUI 목록 갱신에 사용되는 함수</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RefreshEUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    Document doc;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        doc = Jsoup.connect(<span class="string">"http://*******.co.kr:****/***/*******/*****"</span>)</span><br><span class="line">                                .requestBody(<span class="string">"&#123;\"username\":\"*****\",\"password\":\"***********\"&#125;"</span>)</span><br><span class="line">                                .ignoreContentType(<span class="keyword">true</span>)</span><br><span class="line">                                .post();</span><br><span class="line">                        jwt = <span class="keyword">new</span> JSONObject(doc.text()).getString(<span class="string">"jwt"</span>);</span><br><span class="line">                        doc = Jsoup.connect(<span class="string">"http://*******.co.kr:****/***/*******?limit=100"</span>)</span><br><span class="line">                                .header(<span class="string">"Grpc-Metadata-Authorization"</span>, <span class="string">"Bearer "</span> + jwt)</span><br><span class="line">                                .ignoreContentType(<span class="keyword">true</span>)</span><br><span class="line">                                .get();</span><br><span class="line">                        JSONArray result = <span class="keyword">new</span> JSONObject(doc.text()).getJSONArray(<span class="string">"result"</span>);</span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length(); i++) &#123;</span><br><span class="line">                            String devEUI = result.getJSONObject(i).getString(<span class="string">"devEUI"</span>);</span><br><span class="line">                            Log.d(TAG, <span class="string">"devEUI: "</span> + devEUI);</span><br><span class="line">                            euiList.add(devEUI);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                       <span class="comment">// 오류 팝업 발생</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            thread.start();</span><br><span class="line">            thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DB-쿼리-소스"><a href="#DB-쿼리-소스" class="headerlink" title="DB 쿼리 소스"></a>DB 쿼리 소스</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jsoup.connect(<span class="string">"http://*******.co.kr:****/query?u="</span> + getString(R.string.Username) + <span class="string">"&amp;p="</span> + getString(R.string.Password) + <span class="string">"&amp;db=******&amp;q=select%20****%2c*******%2c*****%20from%20*****************%20where%20*******%3d%27"</span> + euiList.get(i) + <span class="string">"%27%20order%20by%20time%20desc%20limit%2010"</span>).ignoreContentType(<span class="keyword">true</span>).get();</span><br></pre></td></tr></table></figure>
+
+<h2 id="구글맵스-쿼리-소스"><a href="#구글맵스-쿼리-소스" class="headerlink" title="구글맵스 쿼리 소스"></a>구글맵스 쿼리 소스</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()</span><br><span class="line">                .findFragmentById(R.id.map);</span><br><span class="line">        mapFragment.getMapAsync(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="어플-실행-화면"><a href="#어플-실행-화면" class="headerlink" title="어플 실행 화면"></a>어플 실행 화면</h2><img src="/oLoRa/2019/10/29/모니터링용%20안드로이드%20어플%20제작/e419dfa97ebb3efc.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/10/29/모니터링용 안드로이드 어플 제작/" data-id="ck61v9e9f000chkuzbyq7bs09" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-InfluxDB 서버 구축" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/10/04/InfluxDB 서버 구축/" class="article-date">
+  <time datetime="2019-10-04T09:27:15.000Z" itemprop="datePublished">2019-10-04</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/10/04/InfluxDB 서버 구축/">InfluxDB 서버 구축</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>LoRa 단말기로부터 데이터를 LoRa App Server에서 확인할 수 있다.<br>단, 로깅 기능은 없기 때문에 로그를 저장할 데이터베이스 서버를 따로 구축한다.</p>
+<h1 id="InfluxDB-설치"><a href="#InfluxDB-설치" class="headerlink" title="InfluxDB 설치"></a>InfluxDB 설치</h1><p>InfluxDB는 외부 종속성이 없는 time-series 데이터베이스이다. 실시간 처리나 시간별로 데이터를 남기는 로깅에 적합하며, REST API 또한 제공해주므로 TCP/IP 요청으로 쉽게 데이터베이스에 접근할 수 있다.<br>LoRa App Server에서 InfluxDB 서버로 데이터를 자동 전송하는 기능을 제공해주므로 사용하기 매우 적합한 솔루션이라 볼 수 있다.<br><a href="https://www.influxdata.com/" target="_blank" rel="noopener">https://www.influxdata.com/</a></p>
+<p>모든 과정은 우분투 기준으로 작성됐다.</p>
+<h2 id="repository-등록"><a href="#repository-등록" class="headerlink" title="repository 등록"></a>repository 등록</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -</span><br><span class="line">source /etc/lsb-release</span><br><span class="line">echo &quot;deb https://repos.influxdata.com/$&#123;DISTRIB_ID,,&#125; $&#123;DISTRIB_CODENAME&#125; stable&quot; | sudo tee /etc/apt/sources.list.d/influxdb.list</span><br></pre></td></tr></table></figure>
+
+<h2 id="설치-및-서비스-시작"><a href="#설치-및-서비스-시작" class="headerlink" title="설치 및 서비스 시작"></a>설치 및 서비스 시작</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update &amp;&amp; sudo apt-get install influxdb</span><br><span class="line">sudo service influxdb start</span><br></pre></td></tr></table></figure>
+
+<h2 id="InfluxDB-포트"><a href="#InfluxDB-포트" class="headerlink" title="InfluxDB 포트"></a>InfluxDB 포트</h2><p>InfluxDB는 API 통신을 위해 8086 포트를 사용한다.<br>인터넷과 연결할 때는 보안을 위해 다른 포트로 포워딩을 시켜주었다.</p>
+<h2 id="Lora-App-Server와-연계"><a href="#Lora-App-Server와-연계" class="headerlink" title="Lora App Server와 연계"></a>Lora App Server와 연계</h2><p>App Server -&gt; Device-profiles -&gt; [my device profile] -&gt; CODEC으로 이동하면 LoRa 단말로부터 수신한 데이터를 App Server단에서 가공하여 데이터베이스 서버로 넘겨줄 수 있다.<br>Android App에서 사용할 Application Layer Protocol에 맞추어 수신한 바이너리 데이터를 문자열화하여 전송한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Decode decodes an array of bytes into an object.</span></span><br><span class="line"><span class="comment">//  - fPort contains the LoRaWAN fPort number</span></span><br><span class="line"><span class="comment">//  - bytes is an array of bytes, e.g. [225, 230, 255, 0]</span></span><br><span class="line"><span class="comment">// The function must return an object, e.g. &#123;"temperature": 22.5&#125;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Decode</span>(<span class="params">fPort, bytes</span>) </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> status = bytes[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">var</span> latitude_sign = (bytes[<span class="number">4</span>]&gt;&gt;<span class="number">7</span>) &amp; <span class="number">0x01</span>;</span><br><span class="line">  <span class="keyword">var</span> latitude_int = (bytes[<span class="number">4</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">1</span> | ((bytes[<span class="number">3</span>] &gt;&gt; <span class="number">7</span>) &amp; <span class="number">0x01</span>);</span><br><span class="line">  <span class="keyword">var</span> latitude_dec = (bytes[<span class="number">3</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">16</span> | (bytes[<span class="number">2</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span> | bytes[<span class="number">1</span>] &amp; <span class="number">0xFF</span>;</span><br><span class="line">  <span class="keyword">var</span> latitude_str = <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">if</span>(latitude_sign == <span class="number">0</span>) latitude_str += <span class="string">'+'</span>;</span><br><span class="line">  <span class="keyword">else</span> latitude_str += <span class="string">'-'</span>;</span><br><span class="line">  latitude_str += latitude_int.toString() + <span class="string">'.'</span> + latitude_dec.toString();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> longitude_sign = (bytes[<span class="number">8</span>]&gt;&gt;<span class="number">7</span>) &amp; <span class="number">0x01</span>;</span><br><span class="line">  <span class="keyword">var</span> longitude_int = (bytes[<span class="number">8</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">1</span> | ((bytes[<span class="number">7</span>] &gt;&gt; <span class="number">7</span>) &amp; <span class="number">0x01</span>);</span><br><span class="line">  <span class="keyword">var</span> longitude_dec = (bytes[<span class="number">7</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">16</span> | bytes[<span class="number">6</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">5</span>];</span><br><span class="line">  <span class="keyword">var</span> longitude_str = <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">if</span>(longitude_sign == <span class="number">0</span>) longitude_str += <span class="string">'+'</span>;</span><br><span class="line">  <span class="keyword">else</span> longitude_str += <span class="string">'-'</span>;</span><br><span class="line">  longitude_str += longitude_int.toString() + <span class="string">'.'</span> + longitude_dec.toString();</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> temperature = (bytes[<span class="number">10</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">9</span>]);</span><br><span class="line">  <span class="keyword">var</span> humidity = (bytes[<span class="number">12</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">11</span>]) / <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">if</span> (temperature &amp; <span class="number">0x8000</span>) &#123;</span><br><span class="line">    temperature = ~temperature + <span class="number">1</span>;</span><br><span class="line">    temperature &amp;= <span class="number">0x7FFF</span>;</span><br><span class="line">    temperature *= <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  temperature /= <span class="number">100</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> battery = bytes[<span class="number">13</span>];</span><br><span class="line">  <span class="keyword">var</span> radiation = (bytes[<span class="number">15</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">14</span>]) / <span class="number">100</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="string">"node0"</span>: status.toString() + <span class="string">'/'</span> + latitude_str + <span class="string">'/'</span> + longitude_str + <span class="string">'/'</span> + temperature.toString() + <span class="string">'/'</span> + humidity.toString() + <span class="string">'/'</span> + battery.toString() + <span class="string">'/'</span> + radiation.toString()</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>App Server -&gt; Applications -&gt; [my application] -&gt; Integrations로 이동하여 수신한 데이터를 다른 서비스와 연계할 수 있다.<br>Create 버튼을 누르고 Integration 종류 선택창 중에서 InfluxDB를 선택한다.</p>
+<p>데이터베이스 서버의 API endpoint와 Username, Password, Database name를 입력하여 저장한다.</p>
+<p>이렇게하여 InfluxDB와 연계되었다.</p>
+<h2 id="데이터가-저장되는지-확인"><a href="#데이터가-저장되는지-확인" class="headerlink" title="데이터가 저장되는지 확인"></a>데이터가 저장되는지 확인</h2><img src="/oLoRa/2019/10/04/InfluxDB%20서버%20구축/image0.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/10/04/InfluxDB 서버 구축/" data-id="ck61v9e9g000dhkuz132gb3gn" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-테스트 보드(v19.1) 제작" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/" class="article-date">
+  <time datetime="2019-09-04T01:03:39.000Z" itemprop="datePublished">2019-09-04</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/">테스트 보드(v19.1) 제작</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>기판 제작에 앞서 테스트 보드(v19.1)를 제작<br>각각의 모듈로 구성하여 메인보드에 연결하는 방식(문제가 있는 부분만 교체하여 테스트 진행 -&gt; 문제해결용이 및 비용절감)</p>
+<hr>
+<ul>
+<li><h2 id="GPS-모듈"><a href="#GPS-모듈" class="headerlink" title="GPS 모듈"></a>GPS 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image0.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="LoRa-모듈"><a href="#LoRa-모듈" class="headerlink" title="LoRa 모듈"></a>LoRa 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image1.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="Main-Processor-모듈"><a href="#Main-Processor-모듈" class="headerlink" title="Main Processor 모듈"></a>Main Processor 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image2.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="Co-Precessor-모듈"><a href="#Co-Precessor-모듈" class="headerlink" title="Co-Precessor 모듈"></a>Co-Precessor 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image3.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="전원관리모듈"><a href="#전원관리모듈" class="headerlink" title="전원관리모듈"></a>전원관리모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image4.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="센서-온습도센서-가속도센서-자이로센서-모듈"><a href="#센서-온습도센서-가속도센서-자이로센서-모듈" class="headerlink" title="센서(온습도센서, 가속도센서, 자이로센서) 모듈"></a>센서(온습도센서, 가속도센서, 자이로센서) 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image5.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="방사선-측정-모듈"><a href="#방사선-측정-모듈" class="headerlink" title="방사선 측정 모듈"></a>방사선 측정 모듈</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image6.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="메인보드"><a href="#메인보드" class="headerlink" title="메인보드"></a>메인보드</h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image7.jpg">
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="모두-연결한-모습"><a href="#모두-연결한-모습" class="headerlink" title="모두 연결한 모습"></a><strong>모두 연결한 모습</strong></h2><img src="/oLoRa/2019/09/04/테스트%20보드(v19.1)%20제작/image8.jpg"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/09/04/테스트 보드(v19.1) 제작/" data-id="ck61v9e9e000bhkuz7ertnzwk" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-USB포트와 배터리 충전 회로" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/08/10/USB포트와 배터리 충전 회로/" class="article-date">
+  <time datetime="2019-08-10T07:03:06.000Z" itemprop="datePublished">2019-08-10</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/08/10/USB포트와 배터리 충전 회로/">USB포트와 배터리 충전 회로</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <img src="/oLoRa/2019/08/10/USB포트와%20배터리%20충전%20회로/1.png">
+
+<ul>
+<li>USB type B 포트를 이용하여 데이터 통신을 할 수 있으며, 배터리를 1A의 속도로 충전할 수 있다</li>
+<li>충전 IC는 TP4056을 이용하였다.</li>
+<li>추가적으로 고속 충전을 위한 포트를 따로 구성할 계획이다.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/08/10/USB포트와 배터리 충전 회로/" data-id="ck61v9e9c000ahkuzi6thuyvm" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-온습도 측정값을 프로토콜에 추가" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/07/31/온습도 측정값을 프로토콜에 추가/" class="article-date">
+  <time datetime="2019-07-31T02:40:51.000Z" itemprop="datePublished">2019-07-31</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/07/31/온습도 측정값을 프로토콜에 추가/">온습도 측정값을 프로토콜에 추가</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <img src="/oLoRa/2019/07/31/온습도%20측정값을%20프로토콜에%20추가/1.png">
+
+<img src="/oLoRa/2019/07/31/온습도%20측정값을%20프로토콜에%20추가/2.png">
+
+<img src="/oLoRa/2019/07/31/온습도%20측정값을%20프로토콜에%20추가/3.png">
+
+<hr>
+<ul>
+<li>4바이트의 공간에 온도와 습도 값을 각각 2바이트씩 할당하여 GPS 이후 데이터에 추가</li>
+<li>LoRa를 통해 전송받은 base64 인코딩의 데이터를 hexadecimal로 변환하여 하위 4바이트를 얻은 뒤,<br>2바이트씩 각각 나누어 정수로 변환하면 온습도 측정 값을 얻을 수 있다.</li>
+<li>base64: <strong>MzUwOC4zNzU2Nk4xMjY1NS45OTc5NUUzDDkO</strong></li>
+<li>hex: <strong>33 35 30 38 2e 33 37 35 36 36 4e 31 32 36 35 35 2e 39 39 37 39 35 45 33 0c 39 0e</strong></li>
+<li>하위 4바이트: <strong>33 0c 39 0e</strong></li>
+<li>정수로 변환: <strong>3119 3763</strong></li>
+</ul>
+<ul>
+<li>여기서 <strong>3119</strong>는 온도 값이며, 섭씨 31.19도를 뜻한다.</li>
+<li>다음으로 <strong>3763</strong>은 습도 값이며, 37.63%를 뜻한다.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/07/31/온습도 측정값을 프로토콜에 추가/" data-id="ck61v9e970008hkuzbxxeodi9" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-온습도센서 도착" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/07/31/온습도센서 도착/" class="article-date">
+  <time datetime="2019-07-31T02:14:32.000Z" itemprop="datePublished">2019-07-31</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/07/31/온습도센서 도착/">I2C 온습도센서 모듈(ETH-01D) 도착</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <img src="/oLoRa/2019/07/31/온습도센서%20도착/image0.jpg">
+<p>I2C 온습도센서 모듈(ETH-01D) 도착</p>
+<ul>
+<li>온도측정범위: -40~125도</li>
+<li>습도측정범위: 0~100%</li>
+<li>온도오차: ±0.3도(0~70도), ±0.5도(이외범위)</li>
+<li>습도오차: ±3.8%(20~20%), ±5.0%(이외범위)</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/07/31/온습도센서 도착/" data-id="ck61v9e980009hkuz90svxhq0" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LoRa 데이터 전송 테스트" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/07/23/LoRa 데이터 전송 테스트/" class="article-date">
+  <time datetime="2019-07-23T07:24:52.000Z" itemprop="datePublished">2019-07-23</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/07/23/LoRa 데이터 전송 테스트/">LoRa 데이터 전송 테스트</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h1 id="LoRa-데이터-전송-테스트"><a href="#LoRa-데이터-전송-테스트" class="headerlink" title="LoRa 데이터 전송 테스트"></a><strong>LoRa 데이터 전송 테스트</strong></h1><p>LoRa 장비에서 서버로 “hello world!” 문자열을 전송해보았다.</p>
+<h2 id="ASCII-to-HEX"><a href="#ASCII-to-HEX" class="headerlink" title="ASCII to HEX"></a><strong>ASCII to HEX</strong></h2><p>LoRa의 AT 커맨드에 데이터를 전송하는 부분은 hex 포멧으로 정의되어 있으므로, “hello world!”를 hex로 변환하는 과정이 필요하다.<br><code>hello world! =&gt; 0x68656c6c6f20776f726c6421</code></p>
+<img src="/oLoRa/2019/07/23/LoRa%20데이터%20전송%20테스트/1encoding.png">
+
+
+<h2 id="LoRa를-통해-전송"><a href="#LoRa를-통해-전송" class="headerlink" title="LoRa를 통해 전송"></a><strong>LoRa를 통해 전송</strong></h2><p>at+send=lora:X:YYY 명령어를 통해 데이터를 전송한다.<br>X: LoRa 포트<br>YYY: 50바이트 미만의 hex 데이터<br><code>at+send=lora:2:68656c6c6f20776f726c6421</code></p>
+<img src="/oLoRa/2019/07/23/LoRa%20데이터%20전송%20테스트/2send.png">
+
+
+<h2 id="서버에서-확인"><a href="#서버에서-확인" class="headerlink" title="서버에서 확인"></a><strong>서버에서 확인</strong></h2><p>서버에 메시지가 도착하였으며, 데이터는 base64로 인코딩되어 있음.<br><code>data: &quot;aGVsbG8gd29ybGQh&quot;</code></p>
+<img src="/oLoRa/2019/07/23/LoRa%20데이터%20전송%20테스트/3receive.png">
+
+
+<h2 id="base64-to-ASCII"><a href="#base64-to-ASCII" class="headerlink" title="base64 to ASCII"></a><strong>base64 to ASCII</strong></h2><p>base64 인코딩을 ASCII 인코딩으로 변환하면 원래 메시지가 무엇인지 확인할 수 있다.<br><code>aGVsbG8gd29ybGQh =&gt; hello world!</code></p>
+<img src="/oLoRa/2019/07/23/LoRa%20데이터%20전송%20테스트/4decoding.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/07/23/LoRa 데이터 전송 테스트/" data-id="ck61v9e8y0003hkuzuv8jnzqw" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LoRa 장비를 LoRaWAN에 연결" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/07/23/LoRa 장비를 LoRaWAN에 연결/" class="article-date">
+  <time datetime="2019-07-23T07:18:38.000Z" itemprop="datePublished">2019-07-23</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/07/23/LoRa 장비를 LoRaWAN에 연결/">LoRa 장비를 LoRaWAN에 연결</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h1 id="LoRa-장비를-LoRaWAN에-연결"><a href="#LoRa-장비를-LoRaWAN에-연결" class="headerlink" title="LoRa 장비를 LoRaWAN에 연결"></a><strong>LoRa 장비를 LoRaWAN에 연결</strong></h1><p>AT 명령어를 이용하여 장비를 설정하고 연결한다.<br>Line Ending은 <cr><lf>를 사용한다.</lf></cr></p>
+<h2 id="버전-확인"><a href="#버전-확인" class="headerlink" title="버전 확인"></a><strong>버전 확인</strong></h2><p><code>at+version</code></p>
+<h2 id="연결-모드-설정"><a href="#연결-모드-설정" class="headerlink" title="연결 모드 설정"></a><strong>연결 모드 설정</strong></h2><p>0: OTTA, 1: ABP<br><code>at+set_config=lora:join_mode:0</code></p>
+<h2 id="LoRa-클래스-설정"><a href="#LoRa-클래스-설정" class="headerlink" title="LoRa 클래스 설정"></a><strong>LoRa 클래스 설정</strong></h2><p>0: Class A, 1: Class B, 2: Class C<br><code>at+set_config=lora:class:0</code></p>
+<h2 id="주파수-지역-설정"><a href="#주파수-지역-설정" class="headerlink" title="주파수/지역 설정"></a><strong>주파수/지역 설정</strong></h2><p>한국: KR920<br><code>at+set_config=lora:region:KR920</code></p>
+<h2 id="장비-EUI-설정"><a href="#장비-EUI-설정" class="headerlink" title="장비 EUI 설정"></a><strong>장비 EUI 설정</strong></h2><p><code>at+set_config=lora:dev_eui:(8byte hex eui)</code></p>
+<h2 id="APP-EUI-설정"><a href="#APP-EUI-설정" class="headerlink" title="APP EUI 설정"></a><strong>APP EUI 설정</strong></h2><p>OTTA 모드에서는 이용하지 않으며, 형식에 맞게 아무 값이나 사용<br><code>at+set_config=lora:app_eui:(8byte hex eui)</code></p>
+<h2 id="APP-KEY-설정"><a href="#APP-KEY-설정" class="headerlink" title="APP KEY 설정"></a><strong>APP KEY 설정</strong></h2><p>LoRa Server의 Application에서 생성한 App key를 입력한다.<br><code>at+set_config=lora:app_key:(16 byte hex key)</code></p>
+<h2 id="연결-시작"><a href="#연결-시작" class="headerlink" title="연결 시작"></a><strong>연결 시작</strong></h2><p>연결에 성공하면 LoRa Server에서 확인할 수 있다.<br><code>at+join</code></p>
+<h2 id="메시지-보내기"><a href="#메시지-보내기" class="headerlink" title="메시지 보내기"></a><strong>메시지 보내기</strong></h2><p>메시지 전송에 성공하면 LoRa Server에서 확인할 수 있다.<br><code>at+send=lora:2:1234567890</code></p>
+<hr>
+<img src="/oLoRa/2019/07/23/LoRa%20장비를%20LoRaWAN에%20연결/IMG_6311.jpg">
+<img src="/oLoRa/2019/07/23/LoRa%20장비를%20LoRaWAN에%20연결/image0.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/07/23/LoRa 장비를 LoRaWAN에 연결/" data-id="ck61v9e910005hkuz28tqs304" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LoRa서버 관리" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/07/23/LoRa서버 관리/" class="article-date">
+  <time datetime="2019-07-23T07:15:07.000Z" itemprop="datePublished">2019-07-23</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/oLoRa/2019/07/23/LoRa서버 관리/">LoRa서버 관리</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <img src="/oLoRa/2019/07/23/LoRa서버%20관리/loraserver.png">
+
+<h1 id="LoRa-서버-관리"><a href="#LoRa-서버-관리" class="headerlink" title="LoRa 서버 관리"></a><strong>LoRa 서버 관리</strong></h1><h2 id="Network-servers"><a href="#Network-servers" class="headerlink" title="Network-servers"></a><strong>Network-servers</strong></h2><p>네트워크 서버의 위치를 설정<br><code>LoRa App Server is able to connect to one or multiple LoRa Server network-server instances.</code></p>
+<h2 id="Gateway-pofiles"><a href="#Gateway-pofiles" class="headerlink" title="Gateway-pofiles"></a><strong>Gateway-pofiles</strong></h2><p>게이트웨이의 프로파일 관리(채널 등등)</p>
+<h2 id="Organizations"><a href="#Organizations" class="headerlink" title="Organizations"></a><strong>Organizations</strong></h2><p>조직 관리. 조직은 서비스와 장비 프로파일을 생성하고 게이트웨이를 관리할 수도 있음<br><code>It constists of Service-profiles, Decvice Profiles, Gateways, Applications, Users. 
+(말 그대로 조직임. 앞에 써놓은 5가지 프로필을 포함할 수 있는 조직.)</code></p>
+<h2 id="Service-profiles"><a href="#Service-profiles" class="headerlink" title="Service-profiles"></a><strong>Service-profiles</strong></h2><p>서비스 프로파일을 관리하며, 네트워크 서버를 지정함</p>
+<h2 id="Device-profiles"><a href="#Device-profiles" class="headerlink" title="Device-profiles"></a><strong>Device-profiles</strong></h2><p>장치의 프로파일을 관리하며, 네트워크 서버, LoRaWAN MAC 버전, 지역 파라미터 리비전, Join 방식(OTTA/ABP), 클래스 등을 지정함</p>
+<h2 id="Applications"><a href="#Applications" class="headerlink" title="Applications"></a><strong>Applications</strong></h2><p>어플리케이션을 관리하며, 서비스 프로파일을 지정함<br>연결 될 장비를 이곳에서 지정하며, OTTA Join 방식의 경우, app_key와 dev_eui가 필요하고 연결을 허용하도록 함</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/07/23/LoRa서버 관리/" data-id="ck61v9e950007hkuzgacn92wj" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/oLoRa/page/2/">2</a><a class="extend next" rel="next" href="/oLoRa/page/2/">Next &raquo;</a>
+    </nav>
+  
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/">LoRa Server에서 ChirpStack으로 마이그레이션</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/">모니터링용 안드로이드 어플 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/04/InfluxDB 서버 구축/">InfluxDB 서버 구축</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/">테스트 보드(v19.1) 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/08/10/USB포트와 배터리 충전 회로/">USB포트와 배터리 충전 회로</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2020/01/">1월 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/10/">10월 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/09/">9월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/08/">8월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/07/">7월 2019</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 DEVSIGN<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/oLoRa/" class="mobile-nav-link">Home</a>
+  
+    <a href="/oLoRa/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/oLoRa/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="To Top"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+
+<script src="/oLoRa/js/script.js"></script>
+
+</div>
+</body>
+</html>

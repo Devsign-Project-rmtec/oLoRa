@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>InfluxDB 서버 구축 | Project oLoRa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="LoRa 단말기로부터 데이터를 LoRa App Server에서 확인할 수 있다.단, 로깅 기능은 없기 때문에 로그를 저장할 데이터베이스 서버를 따로 구축한다. InfluxDB 설치InfluxDB는 외부 종속성이 없는 time-series 데이터베이스이다. 실시간 처리나 시간별로 데이터를 남기는 로깅에 적합하며, REST API 또한 제공해주므로 TCP/IP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InfluxDB 서버 구축">
+<meta property="og:url" content="https://Devsign-Project-rmtec.github.io/2019/10/04/InfluxDB 서버 구축/index.html">
+<meta property="og:site_name" content="Project oLoRa">
+<meta property="og:description" content="LoRa 단말기로부터 데이터를 LoRa App Server에서 확인할 수 있다.단, 로깅 기능은 없기 때문에 로그를 저장할 데이터베이스 서버를 따로 구축한다. InfluxDB 설치InfluxDB는 외부 종속성이 없는 time-series 데이터베이스이다. 실시간 처리나 시간별로 데이터를 남기는 로깅에 적합하며, REST API 또한 제공해주므로 TCP/IP">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://devsign-project-rmtec.github.io/oLoRa/2019/10/04/InfluxDB%20서버%20구축/image0.png">
+<meta property="og:updated_time" content="2019-11-01T09:21:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="InfluxDB 서버 구축">
+<meta name="twitter:description" content="LoRa 단말기로부터 데이터를 LoRa App Server에서 확인할 수 있다.단, 로깅 기능은 없기 때문에 로그를 저장할 데이터베이스 서버를 따로 구축한다. InfluxDB 설치InfluxDB는 외부 종속성이 없는 time-series 데이터베이스이다. 실시간 처리나 시간별로 데이터를 남기는 로깅에 적합하며, REST API 또한 제공해주므로 TCP/IP">
+<meta name="twitter:image" content="https://devsign-project-rmtec.github.io/oLoRa/2019/10/04/InfluxDB%20서버%20구축/image0.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Project oLoRa" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/oLoRa/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/Devsign-Project-rmtec/oLoRa"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">Project oLoRa</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/oLoRa/">Home</a>
+      
+        <a class="main-nav-link" href="/oLoRa/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/oLoRa/about">About</a>
+      
+      <a class="main-nav-link st-search-show-outputs">Search</a>
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-InfluxDB 서버 구축" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/10/04/InfluxDB 서버 구축/" class="article-date">
+  <time datetime="2019-10-04T09:27:15.000Z" itemprop="datePublished">2019-10-04</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      InfluxDB 서버 구축
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>LoRa 단말기로부터 데이터를 LoRa App Server에서 확인할 수 있다.<br>단, 로깅 기능은 없기 때문에 로그를 저장할 데이터베이스 서버를 따로 구축한다.</p>
+<h1 id="InfluxDB-설치"><a href="#InfluxDB-설치" class="headerlink" title="InfluxDB 설치"></a>InfluxDB 설치</h1><p>InfluxDB는 외부 종속성이 없는 time-series 데이터베이스이다. 실시간 처리나 시간별로 데이터를 남기는 로깅에 적합하며, REST API 또한 제공해주므로 TCP/IP 요청으로 쉽게 데이터베이스에 접근할 수 있다.<br>LoRa App Server에서 InfluxDB 서버로 데이터를 자동 전송하는 기능을 제공해주므로 사용하기 매우 적합한 솔루션이라 볼 수 있다.<br><a href="https://www.influxdata.com/" target="_blank" rel="noopener">https://www.influxdata.com/</a></p>
+<p>모든 과정은 우분투 기준으로 작성됐다.</p>
+<h2 id="repository-등록"><a href="#repository-등록" class="headerlink" title="repository 등록"></a>repository 등록</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -</span><br><span class="line">source /etc/lsb-release</span><br><span class="line">echo &quot;deb https://repos.influxdata.com/$&#123;DISTRIB_ID,,&#125; $&#123;DISTRIB_CODENAME&#125; stable&quot; | sudo tee /etc/apt/sources.list.d/influxdb.list</span><br></pre></td></tr></table></figure>
+
+<h2 id="설치-및-서비스-시작"><a href="#설치-및-서비스-시작" class="headerlink" title="설치 및 서비스 시작"></a>설치 및 서비스 시작</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update &amp;&amp; sudo apt-get install influxdb</span><br><span class="line">sudo service influxdb start</span><br></pre></td></tr></table></figure>
+
+<h2 id="InfluxDB-포트"><a href="#InfluxDB-포트" class="headerlink" title="InfluxDB 포트"></a>InfluxDB 포트</h2><p>InfluxDB는 API 통신을 위해 8086 포트를 사용한다.<br>인터넷과 연결할 때는 보안을 위해 다른 포트로 포워딩을 시켜주었다.</p>
+<h2 id="Lora-App-Server와-연계"><a href="#Lora-App-Server와-연계" class="headerlink" title="Lora App Server와 연계"></a>Lora App Server와 연계</h2><p>App Server -&gt; Device-profiles -&gt; [my device profile] -&gt; CODEC으로 이동하면 LoRa 단말로부터 수신한 데이터를 App Server단에서 가공하여 데이터베이스 서버로 넘겨줄 수 있다.<br>Android App에서 사용할 Application Layer Protocol에 맞추어 수신한 바이너리 데이터를 문자열화하여 전송한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Decode decodes an array of bytes into an object.</span></span><br><span class="line"><span class="comment">//  - fPort contains the LoRaWAN fPort number</span></span><br><span class="line"><span class="comment">//  - bytes is an array of bytes, e.g. [225, 230, 255, 0]</span></span><br><span class="line"><span class="comment">// The function must return an object, e.g. &#123;"temperature": 22.5&#125;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Decode</span>(<span class="params">fPort, bytes</span>) </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> status = bytes[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">var</span> latitude_sign = (bytes[<span class="number">4</span>]&gt;&gt;<span class="number">7</span>) &amp; <span class="number">0x01</span>;</span><br><span class="line">  <span class="keyword">var</span> latitude_int = (bytes[<span class="number">4</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">1</span> | ((bytes[<span class="number">3</span>] &gt;&gt; <span class="number">7</span>) &amp; <span class="number">0x01</span>);</span><br><span class="line">  <span class="keyword">var</span> latitude_dec = (bytes[<span class="number">3</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">16</span> | (bytes[<span class="number">2</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span> | bytes[<span class="number">1</span>] &amp; <span class="number">0xFF</span>;</span><br><span class="line">  <span class="keyword">var</span> latitude_str = <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">if</span>(latitude_sign == <span class="number">0</span>) latitude_str += <span class="string">'+'</span>;</span><br><span class="line">  <span class="keyword">else</span> latitude_str += <span class="string">'-'</span>;</span><br><span class="line">  latitude_str += latitude_int.toString() + <span class="string">'.'</span> + latitude_dec.toString();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> longitude_sign = (bytes[<span class="number">8</span>]&gt;&gt;<span class="number">7</span>) &amp; <span class="number">0x01</span>;</span><br><span class="line">  <span class="keyword">var</span> longitude_int = (bytes[<span class="number">8</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">1</span> | ((bytes[<span class="number">7</span>] &gt;&gt; <span class="number">7</span>) &amp; <span class="number">0x01</span>);</span><br><span class="line">  <span class="keyword">var</span> longitude_dec = (bytes[<span class="number">7</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">16</span> | bytes[<span class="number">6</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">5</span>];</span><br><span class="line">  <span class="keyword">var</span> longitude_str = <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">if</span>(longitude_sign == <span class="number">0</span>) longitude_str += <span class="string">'+'</span>;</span><br><span class="line">  <span class="keyword">else</span> longitude_str += <span class="string">'-'</span>;</span><br><span class="line">  longitude_str += longitude_int.toString() + <span class="string">'.'</span> + longitude_dec.toString();</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> temperature = (bytes[<span class="number">10</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">9</span>]);</span><br><span class="line">  <span class="keyword">var</span> humidity = (bytes[<span class="number">12</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">11</span>]) / <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">if</span> (temperature &amp; <span class="number">0x8000</span>) &#123;</span><br><span class="line">    temperature = ~temperature + <span class="number">1</span>;</span><br><span class="line">    temperature &amp;= <span class="number">0x7FFF</span>;</span><br><span class="line">    temperature *= <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  temperature /= <span class="number">100</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> battery = bytes[<span class="number">13</span>];</span><br><span class="line">  <span class="keyword">var</span> radiation = (bytes[<span class="number">15</span>] &lt;&lt; <span class="number">8</span> | bytes[<span class="number">14</span>]) / <span class="number">100</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="string">"node0"</span>: status.toString() + <span class="string">'/'</span> + latitude_str + <span class="string">'/'</span> + longitude_str + <span class="string">'/'</span> + temperature.toString() + <span class="string">'/'</span> + humidity.toString() + <span class="string">'/'</span> + battery.toString() + <span class="string">'/'</span> + radiation.toString()</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>App Server -&gt; Applications -&gt; [my application] -&gt; Integrations로 이동하여 수신한 데이터를 다른 서비스와 연계할 수 있다.<br>Create 버튼을 누르고 Integration 종류 선택창 중에서 InfluxDB를 선택한다.</p>
+<p>데이터베이스 서버의 API endpoint와 Username, Password, Database name를 입력하여 저장한다.</p>
+<p>이렇게하여 InfluxDB와 연계되었다.</p>
+<h2 id="데이터가-저장되는지-확인"><a href="#데이터가-저장되는지-확인" class="headerlink" title="데이터가 저장되는지 확인"></a>데이터가 저장되는지 확인</h2><img src="/oLoRa/2019/10/04/InfluxDB%20서버%20구축/image0.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/10/04/InfluxDB 서버 구축/" data-id="ck61v9e9g000dhkuz132gb3gn" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          모니터링용 안드로이드 어플 제작
+        
+      </div>
+    </a>
+  
+  
+    <a href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">테스트 보드(v19.1) 제작</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/">LoRa Server에서 ChirpStack으로 마이그레이션</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/">모니터링용 안드로이드 어플 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/04/InfluxDB 서버 구축/">InfluxDB 서버 구축</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/">테스트 보드(v19.1) 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/08/10/USB포트와 배터리 충전 회로/">USB포트와 배터리 충전 회로</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2020/01/">1월 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/10/">10월 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/09/">9월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/08/">8월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/07/">7월 2019</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 DEVSIGN<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/oLoRa/" class="mobile-nav-link">Home</a>
+  
+    <a href="/oLoRa/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/oLoRa/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="To Top"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+
+<script src="/oLoRa/js/script.js"></script>
+
+</div>
+</body>
+</html>

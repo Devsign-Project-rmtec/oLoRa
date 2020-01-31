@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>모니터링용 안드로이드 어플 제작 | Project oLoRa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="LoRa 단말기로부터 저장된 데이터를 확인할 수 있다.데이터베이스 서버에 저장된 로그를 읽어온 후 시각적으로 표시한다. SDK 17 이상 지원 기기에서 작동하며, Android Studio 3.4.2에서 개발되었다.오픈소스 라이브러리는 jsoup, MPAndroidChart를 활용했다. EUI 목록 갱신에 사용되는 함수123456789101112131415">
+<meta property="og:type" content="article">
+<meta property="og:title" content="모니터링용 안드로이드 어플 제작">
+<meta property="og:url" content="https://Devsign-Project-rmtec.github.io/2019/10/29/모니터링용 안드로이드 어플 제작/index.html">
+<meta property="og:site_name" content="Project oLoRa">
+<meta property="og:description" content="LoRa 단말기로부터 저장된 데이터를 확인할 수 있다.데이터베이스 서버에 저장된 로그를 읽어온 후 시각적으로 표시한다. SDK 17 이상 지원 기기에서 작동하며, Android Studio 3.4.2에서 개발되었다.오픈소스 라이브러리는 jsoup, MPAndroidChart를 활용했다. EUI 목록 갱신에 사용되는 함수123456789101112131415">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://devsign-project-rmtec.github.io/oLoRa/2019/10/29/모니터링용%20안드로이드%20어플%20제작/e419dfa97ebb3efc.png">
+<meta property="og:updated_time" content="2019-11-01T09:16:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="모니터링용 안드로이드 어플 제작">
+<meta name="twitter:description" content="LoRa 단말기로부터 저장된 데이터를 확인할 수 있다.데이터베이스 서버에 저장된 로그를 읽어온 후 시각적으로 표시한다. SDK 17 이상 지원 기기에서 작동하며, Android Studio 3.4.2에서 개발되었다.오픈소스 라이브러리는 jsoup, MPAndroidChart를 활용했다. EUI 목록 갱신에 사용되는 함수123456789101112131415">
+<meta name="twitter:image" content="https://devsign-project-rmtec.github.io/oLoRa/2019/10/29/모니터링용%20안드로이드%20어플%20제작/e419dfa97ebb3efc.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Project oLoRa" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/oLoRa/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/Devsign-Project-rmtec/oLoRa"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">Project oLoRa</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/oLoRa/">Home</a>
+      
+        <a class="main-nav-link" href="/oLoRa/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/oLoRa/about">About</a>
+      
+      <a class="main-nav-link st-search-show-outputs">Search</a>
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-모니터링용 안드로이드 어플 제작" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/" class="article-date">
+  <time datetime="2019-10-29T05:58:52.000Z" itemprop="datePublished">2019-10-29</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      모니터링용 안드로이드 어플 제작
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>LoRa 단말기로부터 저장된 데이터를 확인할 수 있다.<br>데이터베이스 서버에 저장된 로그를 읽어온 후 시각적으로 표시한다.</p>
+<p>SDK 17 이상 지원 기기에서 작동하며, Android Studio 3.4.2에서 개발되었다.<br>오픈소스 라이브러리는 jsoup, MPAndroidChart를 활용했다.</p>
+<h2 id="EUI-목록-갱신에-사용되는-함수"><a href="#EUI-목록-갱신에-사용되는-함수" class="headerlink" title="EUI 목록 갱신에 사용되는 함수"></a>EUI 목록 갱신에 사용되는 함수</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RefreshEUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    Document doc;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        doc = Jsoup.connect(<span class="string">"http://*******.co.kr:****/***/*******/*****"</span>)</span><br><span class="line">                                .requestBody(<span class="string">"&#123;\"username\":\"*****\",\"password\":\"***********\"&#125;"</span>)</span><br><span class="line">                                .ignoreContentType(<span class="keyword">true</span>)</span><br><span class="line">                                .post();</span><br><span class="line">                        jwt = <span class="keyword">new</span> JSONObject(doc.text()).getString(<span class="string">"jwt"</span>);</span><br><span class="line">                        doc = Jsoup.connect(<span class="string">"http://*******.co.kr:****/***/*******?limit=100"</span>)</span><br><span class="line">                                .header(<span class="string">"Grpc-Metadata-Authorization"</span>, <span class="string">"Bearer "</span> + jwt)</span><br><span class="line">                                .ignoreContentType(<span class="keyword">true</span>)</span><br><span class="line">                                .get();</span><br><span class="line">                        JSONArray result = <span class="keyword">new</span> JSONObject(doc.text()).getJSONArray(<span class="string">"result"</span>);</span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length(); i++) &#123;</span><br><span class="line">                            String devEUI = result.getJSONObject(i).getString(<span class="string">"devEUI"</span>);</span><br><span class="line">                            Log.d(TAG, <span class="string">"devEUI: "</span> + devEUI);</span><br><span class="line">                            euiList.add(devEUI);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                       <span class="comment">// 오류 팝업 발생</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            thread.start();</span><br><span class="line">            thread.join();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DB-쿼리-소스"><a href="#DB-쿼리-소스" class="headerlink" title="DB 쿼리 소스"></a>DB 쿼리 소스</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jsoup.connect(<span class="string">"http://*******.co.kr:****/query?u="</span> + getString(R.string.Username) + <span class="string">"&amp;p="</span> + getString(R.string.Password) + <span class="string">"&amp;db=******&amp;q=select%20****%2c*******%2c*****%20from%20*****************%20where%20*******%3d%27"</span> + euiList.get(i) + <span class="string">"%27%20order%20by%20time%20desc%20limit%2010"</span>).ignoreContentType(<span class="keyword">true</span>).get();</span><br></pre></td></tr></table></figure>
+
+<h2 id="구글맵스-쿼리-소스"><a href="#구글맵스-쿼리-소스" class="headerlink" title="구글맵스 쿼리 소스"></a>구글맵스 쿼리 소스</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()</span><br><span class="line">                .findFragmentById(R.id.map);</span><br><span class="line">        mapFragment.getMapAsync(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="어플-실행-화면"><a href="#어플-실행-화면" class="headerlink" title="어플 실행 화면"></a>어플 실행 화면</h2><img src="/oLoRa/2019/10/29/모니터링용%20안드로이드%20어플%20제작/e419dfa97ebb3efc.png">
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="https://Devsign-Project-rmtec.github.io/2019/10/29/모니터링용 안드로이드 어플 제작/" data-id="ck61v9e9f000chkuzbyq7bs09" class="article-share-link">Share</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LoRa Server에서 ChirpStack으로 마이그레이션
+        
+      </div>
+    </a>
+  
+  
+    <a href="/oLoRa/2019/10/04/InfluxDB 서버 구축/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">InfluxDB 서버 구축</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/oLoRa/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/">LoRa Server에서 ChirpStack으로 마이그레이션</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/29/모니터링용 안드로이드 어플 제작/">모니터링용 안드로이드 어플 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/10/04/InfluxDB 서버 구축/">InfluxDB 서버 구축</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/09/04/테스트 보드(v19.1) 제작/">테스트 보드(v19.1) 제작</a>
+          </li>
+        
+          <li>
+            <a href="/oLoRa/2019/08/10/USB포트와 배터리 충전 회로/">USB포트와 배터리 충전 회로</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2020/01/">1월 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/10/">10월 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/09/">9월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/08/">8월 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/oLoRa/archives/2019/07/">7월 2019</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 DEVSIGN<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/oLoRa/" class="mobile-nav-link">Home</a>
+  
+    <a href="/oLoRa/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/oLoRa/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="To Top"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+
+<script src="/oLoRa/js/script.js"></script>
+
+</div>
+</body>
+</html>
