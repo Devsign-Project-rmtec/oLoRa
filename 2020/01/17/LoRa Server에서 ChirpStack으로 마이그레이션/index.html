@@ -7,17 +7,17 @@
   
   <title>LoRa Server에서 ChirpStack으로 마이그레이션 | Project oLoRa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 apt-key adv --keyserve">
+  <meta name="description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 1234sudo apt-key adv -">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LoRa Server에서 ChirpStack으로 마이그레이션">
 <meta property="og:url" content="https://Devsign-Project-rmtec.github.io/2020/01/17/LoRa Server에서 ChirpStack으로 마이그레이션/index.html">
 <meta property="og:site_name" content="Project oLoRa">
-<meta property="og:description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 apt-key adv --keyserve">
+<meta property="og:description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 1234sudo apt-key adv -">
 <meta property="og:locale" content="ko">
-<meta property="og:updated_time" content="2020-01-31T07:47:09.201Z">
+<meta property="og:updated_time" content="2020-01-31T07:51:04.651Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LoRa Server에서 ChirpStack으로 마이그레이션">
-<meta name="twitter:description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 apt-key adv --keyserve">
+<meta name="twitter:description" content="Semtech사의 LoRa™️ 상표권 관련 문제로 LoRa Server 프로젝트가 ChirpStack으로 이름이 변경되었음.https://forum.chirpstack.io/t/rename-to-chirpstack-announcement/6473 이에 따라 진행하던 프로젝트에 대한 수정사항  Repository 등록 1234sudo apt-key adv -">
   
     <link rel="alternative" href="/atom.xml" title="Project oLoRa" type="application/atom+xml">
   
@@ -109,12 +109,17 @@
 <p>이에 따라 진행하던 프로젝트에 대한 수정사항</p>
 <ul>
 <li><p>Repository 등록</p>
-<figure class="highlight plain"><figcaption><span>apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1CE2AFD36DBCCA00</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo echo &quot;deb https://artifacts.chirpstack.io/packages/3.x/deb stable main&quot; | sudo tee /etc/apt/sources.list.d/chirpstack.list</span><br><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1CE2AFD36DBCCA00</span><br><span class="line"></span><br><span class="line">sudo echo &quot;deb https://artifacts.chirpstack.io/packages/3.x/deb stable main&quot; | sudo tee /etc/apt/sources.list.d/chirpstack.list</span><br><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Gateway Bridge 설치<br><code>lora-gateway-bridge</code> 에서 <code>chirpstack-gateway-bridge</code> 로 패키지 이름 변경됨</p>
-<figure class="highlight plain"><figcaption><span>apt-get install chirpstack-gateway-bridge```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">* Network Server 설치</span><br><span class="line">`loraserver` 에서 `chirpstack-network-server` 로 패키지 이름 변경됨</span><br><span class="line">```sudo apt-get install chirpstack-network-server</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install chirpstack-gateway-bridge</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Application Server 설치<br><code>lora-app-server</code> 에서 <code>chirpstack-application-server</code> 로 패키지 이름 변경됨<br><code>sudo apt-get install chirpstack-application-server</code></p>
+<li><p>Network Server 설치<br><code>loraserver</code> 에서 <code>chirpstack-network-server</code> 로 패키지 이름 변경됨</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install chirpstack-network-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Application Server 설치<br><code>lora-app-server</code> 에서 <code>chirpstack-application-server</code> 로 패키지 이름 변경됨</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install chirpstack-application-server</span><br></pre></td></tr></table></figure>
+
 </li>
 </ul>
 <p>기타 파일 이름에 대한 변경사항이 모두 수정되었음</p>
