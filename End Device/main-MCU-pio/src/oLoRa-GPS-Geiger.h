@@ -34,18 +34,45 @@ public:
     }
 
     void updateData() {
-        char buffer[24] = { 0 };
+        uint8_t buffer[16] = { 0 };
+        //Serial.println("begin");
         Wire.beginTransmission(COPROCESSOR_ADDR);
+        //Serial.println("write");
         Wire.write(DATA_ALL);
+        //Serial.println("end");
         Wire.endTransmission();
-        Wire.requestFrom(COPROCESSOR_ADDR, 24);
+        //Serial.println("req");
+        Wire.requestFrom(COPROCESSOR_ADDR, 14);
         delay(1);
-        Wire.readBytes(buffer, 24);
-        for(int i = 0; i < 24; i ++) {
-            Serial.print(buffer[i], HEX);
+        if(Wire.available() != 14) return;
+        //Serial.println("read");
+        Wire.readBytes(buffer, 14);
+        for(int i = 0; i < 14; i ++) {
+            Serial.write(buffer[i]);
             Serial.print(' ');
         }
         Serial.println();
+
+        memcpy(&c, buffer, sizeof(c));
+        Serial.print(c.latitude * 0.00001);
+        Serial.print('\t');
+        Serial.print(c.longitude * 0.00001);
+        Serial.print('\t');
+        Serial.print(year(c.time));
+        Serial.print(' ');
+        Serial.print(month(c.time));
+        Serial.print(' ');
+        Serial.print(day(c.time));
+        Serial.print(' ');
+        Serial.print(hour(c.time));
+        Serial.print(' ');
+        Serial.print(minute(c.time));
+        Serial.print(' ');
+        Serial.print(second(c.time));
+        Serial.print(' ');
+        Serial.print('\t');
+        Serial.print(c.geiger * 0.01);
+        Serial.print('\n');
     }
     
     double getLatitude() {

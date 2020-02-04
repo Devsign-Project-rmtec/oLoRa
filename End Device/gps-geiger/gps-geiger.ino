@@ -1,5 +1,7 @@
 #define GPS_SWSERIAL 0
 
+char debug_buf[14];
+
 #include "Time.h"
 
 #include <Wire.h>
@@ -93,21 +95,23 @@ void I2C_Request() {
         Wire.write(p, sizeof(uint16_t));
     }
     else if (i2c_command == DATA_ALL) {
-        // c.latitude = gps.getLatitude();
-        // c.longitude = gps.getLongitude();
-        // c.time = now();
-        // c.geiger = geiger.getUSV();
-        uint64_t da = 0x1011121314151617;
-        uint64_t db = 0x2021222324252627;
-        uint32_t dc = 0x30313233;
-        uint32_t dd = 0x40414243;
-        memcpy((uint8_t *) &c.latitude, (uint8_t *)&da, 8);
-        memcpy((uint8_t *) &c.latitude+8, (uint8_t *)&db, 8);
-        memcpy((uint8_t *) &c.latitude+16, (uint8_t *)&dc, 4);
-        memcpy((uint8_t *) &c.latitude+20, (uint8_t *)&dd, 4);
+        c.latitude = gps.getLatitude();
+        c.longitude = gps.getLongitude();
+        c.time = now();
+        c.geiger = geiger.getUSV() * 100;
+        // uint64_t da = 0x1011121314151617;
+        // uint64_t db = 0x2021222324252627;
+        // uint32_t dc = 0x30313233;
+        // uint32_t dd = 0x40414243;
+
+        // manual memory offset due to compiler bug
+        // memcpy((uint8_t *) &c.latitude, (uint8_t *)&da, 8);
+        // memcpy((uint8_t *) &c.longitude, (uint8_t *)&db, 8);
+        // memcpy((uint8_t *) &c.time, (uint8_t *)&dc, 4);
+        // memcpy((uint8_t *) &c.geiger, (uint8_t *)&dd, 4);
 
         p = reinterpret_cast<byte *>(&c);
-        Wire.write(p, 24);
+        Wire.write(debug_buf, 14);
     }
 }
 

@@ -11,8 +11,8 @@ private:
     HardwareSerial* s;
 
     struct GPSdata{
-        double latitude = 0;
-        double longitude = 0;
+        int32_t latitude = 0;
+        int32_t longitude = 0;
     } data;
 
     uint32_t atoui32(const char* str) {
@@ -30,11 +30,11 @@ public:
         setTime(0);
     } 
 
-    double getLatitude() {
+    int32_t getLatitude() {
         return data.latitude;
     }
 
-    double getLongitude() {
+    int32_t getLongitude() {
         return data.longitude;
     }
 
@@ -51,15 +51,14 @@ public:
         static int8_t waitLength = 1;
         static int8_t commas = 0;
         static char buffer[15];
-        static char time_str[7] = { 0 };
         static struct DateTime {
-            byte year;
-            byte month;
-            byte day;
-            byte hour;
-            byte minute;
-            byte second;
-        } time;
+            int8_t year;
+            int8_t month;
+            int8_t day;
+            int8_t hour;
+            int8_t minute;
+            int8_t second;
+        } datetime;
         static char npart[8] = { 0 };
         static char dpart[8] = { 0 };
         static int32_t n;
@@ -73,6 +72,7 @@ public:
         
         static int8_t idx = 0;
         static char c;
+        
         if (s->available() >= waitLength) {
             switch (seq) {
             case 0: // $ not found
@@ -90,6 +90,7 @@ public:
                     waitLength = 1;
                     seq = 2;
                     idx = 0;
+                    commas = 0;
                     memset(buffer, 0, sizeof(buffer));
                 }
                 else seq = 0;
@@ -97,7 +98,7 @@ public:
 
             case 2: // parsing
             // $GPRMC,114455.532,A,3735.0079,N,12701.6446,E,0.000000,121.61,110706,,*0A 
-            //       ^1         ^2^3        ^4           ^5^6       ^7     ^8     ^^10   
+            //       ^1         ^2^3        ^4^5         ^6^7       ^8     ^9    10^^11   
                 c = s->read();
                 if(c == ',') {
                     commas++;
@@ -109,13 +110,16 @@ public:
                             break;
 
                         case 2: 
-                            strcpy(time_str, buffer);
+                            //if(c != 'A') commas = 15;
+                            
+                            datetime.hour = (buffer[0] - '0') * 10 + (buffer[1] - '0');
+                            datetime.minute = (buffer[2] - '0') * 10 + (buffer[3] - '0');
+                            datetime.second = (buffer[4] - '0') * 10 + (buffer[5] - '0');
+                            //datetime.hour = 11;
+                            //datetime.minute = 22;
+                            //datetime.second = 33;
                             memset(buffer, 0, sizeof(buffer));
                             idx = 0;
-
-                            time.hour = (time_str[0] - '0') * 10 + (time_str[1] - '0');
-                            time.minute = (time_str[2] - '0') * 10 + (time_str[3] - '0');
-                            time.second = (time_str[4] - '0') * 10 + (time_str[5] - '0');
 
                             break;
 
@@ -137,7 +141,7 @@ public:
                             //integer = n / 100;
                             //decimal = ((n % 100) * 100000 + d) * 0.1666667;
                             //latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
-                            data.latitude = atof(String(buffer).c_str());
+                            data.latitude = atof(String(buffer).c_str()) * 10000;
                             memset(buffer, 0, sizeof(buffer));
 
                             seq = 2; // inserted due to compiler bug
@@ -153,15 +157,15 @@ public:
                             //strcpy(npart, strtok(buffer, "."));
                             //strcpy(dpart, strtok(NULL, "."));
                             //memset(buffer, 0, sizeof(buffer));
-                            idx = 0;
 
                             //n = atol(npart);
                             //d = atol(dpart);
                             //integer = n / 100;
                             //decimal = ((n % 100) * 100000 + d) * 0.1666667;
                             //longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
-                            data.longitude = atof(String(buffer).c_str());
+                            data.longitude = atof(String(buffer).c_str()) * 10000;
                             memset(buffer, 0, sizeof(buffer));
+                            idx = 0;
                             //data.latitude = latitude;
                             //data.longitude = longitude;
 
@@ -173,15 +177,18 @@ public:
                             break;
 
                         case 10:
-                            strcpy(time_str, buffer);
+                            datetime.day = (buffer[0] - '0') * 10 + (buffer[1] - '0');
+                            datetime.month = (buffer[2] - '0') * 10 + (buffer[3] - '0');
+                            datetime.year = (buffer[4] - '0') * 10 + (buffer[5] - '0');
+                            memcpy(debug_buf, buffer, sizeof(buffer));
                             memset(buffer, 0, sizeof(buffer));
                             idx = 0;
-                        
-                            time.day = (time_str[0] - '0') * 10 + (time_str[1] - '0');
-                            time.month = (time_str[2] - '0') * 10 + (time_str[3] - '0');
-                            time.year = (time_str[4] - '0') * 10 + (time_str[5] - '0');
+                            // datetime.day = 1;
+                            // datetime.month = 2;
+                            // datetime.year = 20;
 
-                            setTime(time.hour, time.minute, time.second, time.day, time.month, time.year);
+                            
+                            setTime(datetime.hour, datetime.minute, datetime.second, datetime.day, datetime.month, datetime.year);
 
                             // Serial.print(time.hour);
                             // Serial.print(':');
