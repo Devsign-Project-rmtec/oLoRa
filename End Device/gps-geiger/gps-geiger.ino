@@ -1,6 +1,6 @@
 #define GPS_SWSERIAL 0
 
-char debug_buf[14];
+char debug_buf[32];
 
 #include "Time.h"
 
@@ -9,6 +9,7 @@ char debug_buf[14];
 #define DATA_TIME 0x02
 #define DATA_USV 0x03
 #define DATA_ALL 0x04
+#define DEBUG 0xFF
 volatile byte i2c_command = 0;
 
 #include "pin_definition.h"
@@ -111,7 +112,10 @@ void I2C_Request() {
         // memcpy((uint8_t *) &c.geiger, (uint8_t *)&dd, 4);
 
         p = reinterpret_cast<byte *>(&c);
-        Wire.write(debug_buf, 14);
+        Wire.write(p, 14);
+    }
+    else if (i2c_command == DEBUG) {
+        Wire.write(debug_buf, 32);
     }
 }
 

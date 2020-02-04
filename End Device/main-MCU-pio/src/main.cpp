@@ -38,7 +38,7 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("updating");
+    Serial.println("updating~~~~~~~~~~~~~~~~~~~~~");
     cop.updateData();
     delay(1000);
     // int16_t x, y, z;

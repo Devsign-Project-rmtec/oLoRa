@@ -15,14 +15,23 @@ private:
         int32_t longitude = 0;
     } data;
 
-    uint32_t atoui32(const char* str) {
-        uint32_t val = 0;
-        for(int i = 0; i < strlen(str); i++) {
-            val *= 10;
-            val += str[i] - '0';
+    char *strsep(char **stringp, const char *delim) {
+        char *start = *stringp;
+        char *p;
+
+        p = (start != NULL) ? strpbrk(start, delim) : NULL;
+
+        if (p == NULL)
+        {
+            *stringp = NULL;
+        }
+        else
+        {
+            *p = '\0';
+            *stringp = p + 1;
         }
 
-        return val;
+        return start;
     }
 
 public:
@@ -43,14 +52,7 @@ public:
     }
 
     void task() {
-        // sequence
-        // 0: $ not found
-        // 1: looking for GPRMC
-        // 2: parsing
-        static volatile int8_t seq = 0;
-        static int8_t waitLength = 1;
-        static int8_t commas = 0;
-        static char buffer[15];
+        static char buffer[100];
         static struct DateTime {
             int8_t year;
             int8_t month;
@@ -69,150 +71,80 @@ public:
         static int32_t longitude = 0;
         static bool latdir = false; // S:false, N:true
         static bool londir = false; // W:false, E:true
+
+        static bool availablity = false;
         
         static int8_t idx = 0;
         static char c;
+        static char *p = NULL;
+        static char *pbuffer = NULL;
         
-        if (s->available() >= waitLength) {
-            switch (seq) {
-            case 0: // $ not found
-                c = s->read();
-                if (c == '$'){
-                    seq = 1;
-                    waitLength = 5;
-                }
-                break;
+        if (s->available()) {
+            c = s->read();
+            if(c != '$') buffer[idx++] = c;
+            else {
+                // $GPRMC,114455.532,A,3735.0079,N,12701.6446,E,0.000000,121.61,110706,,*0A 
+                //       ^1         ^2^3        ^4^5         ^6^7       ^8     ^9   10^^11
+                pbuffer = buffer;
+                p = strsep(&pbuffer, ",");
+                if(!strcmp("GPRMC", p)) { // 1st comma
+                    p = strsep(&pbuffer, ","); // 2nd comma
+                    datetime.hour   = (p[0] - '0') * 10 + (p[1] - '0');
+                    datetime.minute = (p[2] - '0') * 10 + (p[3] - '0');
+                    datetime.second = (p[4] - '0') * 10 + (p[5] - '0');
 
-            case 1: // looking for GPRMC
+                    p = strsep(&pbuffer, ","); // 3rd comma
+                    availablity = (p[0] == 'A');
+
+                    if(!availablity) {
+                        strsep(&pbuffer, ",");
+                        strsep(&pbuffer, ",");
+                        strsep(&pbuffer, ",");
+                        strsep(&pbuffer, ",");
+                        strsep(&pbuffer, ",");
+                        strsep(&pbuffer, ",");
+                    }
+                    else {
+                        p = strsep(&pbuffer, "."); // dot
+                        integer = atoi(p);
+                        p = strsep(&pbuffer, ","); // 4th comma
+                        decimal = atoi(p);
+
+                        p = strsep(&pbuffer, ","); // 5th comma
+                        latdir = (p[0] == 'N');
+                        latitude = (latdir ? 1 : -1) * (integer * 10000 + decimal);
+
+                        p = strsep(&pbuffer, "."); // dot
+                        integer = atoi(p);
+                        p = strsep(&pbuffer, ","); // 6th comma
+                        decimal = atoi(p);
+
+                        p = strsep(&pbuffer, ","); // 7th comma
+                        londir = (p[0] == 'E');
+                        longitude = (londir ? 1 : -1) * (integer * 10000 + decimal);
+
+                        p = strsep(&pbuffer, ","); // 8th comma
+
+                        p = strsep(&pbuffer, ","); // 9th comma
+                    }
+
+                    p = strsep(&pbuffer, ","); // 10th comma
+                    // memset(debug_buf, 0, sizeof(debug_buf));
+                    // memcpy(debug_buf, p, sizeof(debug_buf));
+                    datetime.day   = (p[0] - '0') * 10 + (p[1] - '0');
+                    datetime.month = (p[2] - '0') * 10 + (p[3] - '0');
+                    datetime.year  = (p[4] - '0') * 10 + (p[5] - '0');
+
+                    // set data container
+                    setTime(datetime.hour, datetime.minute, datetime.second, datetime.day, datetime.month, datetime.year);
+                    data.latitude = latitude;
+                    data.longitude = longitude;
+                    
+                }
                 memset(buffer, 0, sizeof(buffer));
-                for(idx = 0; idx < 5; idx++) buffer[idx] = s->read();
-                if(!strcmp(buffer, "GPRMC")) {
-                    waitLength = 1;
-                    seq = 2;
-                    idx = 0;
-                    commas = 0;
-                    memset(buffer, 0, sizeof(buffer));
-                }
-                else seq = 0;
-                break;
-
-            case 2: // parsing
-            // $GPRMC,114455.532,A,3735.0079,N,12701.6446,E,0.000000,121.61,110706,,*0A 
-            //       ^1         ^2^3        ^4^5         ^6^7       ^8     ^9    10^^11   
-                c = s->read();
-                if(c == ',') {
-                    commas++;
-                }
-                else {
-                    switch(commas) {
-                        case 1: // time_str time string
-                            buffer[idx++] = c;
-                            break;
-
-                        case 2: 
-                            //if(c != 'A') commas = 15;
-                            
-                            datetime.hour = (buffer[0] - '0') * 10 + (buffer[1] - '0');
-                            datetime.minute = (buffer[2] - '0') * 10 + (buffer[3] - '0');
-                            datetime.second = (buffer[4] - '0') * 10 + (buffer[5] - '0');
-                            //datetime.hour = 11;
-                            //datetime.minute = 22;
-                            //datetime.second = 33;
-                            memset(buffer, 0, sizeof(buffer));
-                            idx = 0;
-
-                            break;
-
-                        case 3: // latitude string
-                            buffer[idx++] = c;
-                            break;
-
-                        case 4: // latitude direction
-                            latdir = (c == 'N');
-
-                            //strcpy(npart, strtok(buffer, "."));
-                            //strcpy(dpart, strtok(NULL, "."));
-                            // memset(buffer, 0, sizeof(buffer));
-                            idx = 0;
-
-                            //n = atol(npart);
-                            //d = atol(dpart);
-
-                            //integer = n / 100;
-                            //decimal = ((n % 100) * 100000 + d) * 0.1666667;
-                            //latitude = (latdir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
-                            data.latitude = atof(String(buffer).c_str()) * 10000;
-                            memset(buffer, 0, sizeof(buffer));
-
-                            seq = 2; // inserted due to compiler bug
-                            break;
-
-                        case 5: // longitude string
-                            buffer[idx++] = c;
-                            break;
-
-                        case 6: // longitude direction
-                            londir = (c == 'E');
-
-                            //strcpy(npart, strtok(buffer, "."));
-                            //strcpy(dpart, strtok(NULL, "."));
-                            //memset(buffer, 0, sizeof(buffer));
-
-                            //n = atol(npart);
-                            //d = atol(dpart);
-                            //integer = n / 100;
-                            //decimal = ((n % 100) * 100000 + d) * 0.1666667;
-                            //longitude = (londir ? 0 : 1) << 31 | integer << 23 | (decimal & 0x7FFFFF);
-                            data.longitude = atof(String(buffer).c_str()) * 10000;
-                            memset(buffer, 0, sizeof(buffer));
-                            idx = 0;
-                            //data.latitude = latitude;
-                            //data.longitude = longitude;
-
-
-                            break;
-
-                        case 9: // time_str date string
-                            buffer[idx++] = c;
-                            break;
-
-                        case 10:
-                            datetime.day = (buffer[0] - '0') * 10 + (buffer[1] - '0');
-                            datetime.month = (buffer[2] - '0') * 10 + (buffer[3] - '0');
-                            datetime.year = (buffer[4] - '0') * 10 + (buffer[5] - '0');
-                            memcpy(debug_buf, buffer, sizeof(buffer));
-                            memset(buffer, 0, sizeof(buffer));
-                            idx = 0;
-                            // datetime.day = 1;
-                            // datetime.month = 2;
-                            // datetime.year = 20;
-
-                            
-                            setTime(datetime.hour, datetime.minute, datetime.second, datetime.day, datetime.month, datetime.year);
-
-                            // Serial.print(time.hour);
-                            // Serial.print(':');
-                            // Serial.print(time.minute);
-                            // Serial.print(':');
-                            // Serial.print(time.second);
-                            // Serial.print(' ');
-                            // Serial.print(time.year);
-                            // Serial.print('/');
-                            // Serial.print(time.month);
-                            // Serial.print('/');
-                            // Serial.print(time.day);
-                            // Serial.println();
-
-                            commas = 0;
-                            seq = 0;
-                            break;
-
-                        default:
-                            break;
-                    } 
-                } // end of if (c == ',') else
-                break; // break of case 2:
+                idx = 0;
             }
         }
+        
     }
 };

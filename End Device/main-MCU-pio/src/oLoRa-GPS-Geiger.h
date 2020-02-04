@@ -13,6 +13,7 @@
 #define DATA_TIME 0x02
 #define DATA_USV 0x03
 #define DATA_ALL 0x04
+#define DEBUG 0xFF
 
 
 class oLoRa_GPS_Geiger {
@@ -43,12 +44,12 @@ public:
         Wire.endTransmission();
         //Serial.println("req");
         Wire.requestFrom(COPROCESSOR_ADDR, 14);
-        delay(1);
-        if(Wire.available() != 14) return;
+        delay(10);
+        //if(Wire.available() != 32) return;
         //Serial.println("read");
         Wire.readBytes(buffer, 14);
         for(int i = 0; i < 14; i ++) {
-            Serial.write(buffer[i]);
+            Serial.print(buffer[i], DEC);
             Serial.print(' ');
         }
         Serial.println();
