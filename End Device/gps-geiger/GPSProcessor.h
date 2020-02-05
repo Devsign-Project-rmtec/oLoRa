@@ -13,6 +13,7 @@ private:
     struct GPSdata{
         int32_t latitude = 0;
         int32_t longitude = 0;
+        bool active = false;
     } data;
 
     char *strsep(char **stringp, const char *delim) {
@@ -49,6 +50,10 @@ public:
 
     struct GPSdata getDataSet() {
         return data;
+    }
+
+    bool isActive() {
+        return data.active;
     }
 
     void task() {
@@ -95,6 +100,7 @@ public:
 
                     p = strsep(&pbuffer, ","); // 3rd comma
                     availablity = (p[0] == 'A');
+                    data.active = availablity;
 
                     if(!availablity) {
                         strsep(&pbuffer, ",");
@@ -109,19 +115,23 @@ public:
                         integer = atoi(p);
                         p = strsep(&pbuffer, ","); // 4th comma
                         decimal = atoi(p);
+                        decimal = ((integer % 100) * 10000 + decimal) * 1.666667;
+                        integer /= 100;
 
                         p = strsep(&pbuffer, ","); // 5th comma
                         latdir = (p[0] == 'N');
-                        latitude = (latdir ? 1 : -1) * (integer * 10000 + decimal);
+                        latitude = (latdir ? 1 : -1) * (integer * 1000000 + decimal);
 
                         p = strsep(&pbuffer, "."); // dot
                         integer = atoi(p);
                         p = strsep(&pbuffer, ","); // 6th comma
                         decimal = atoi(p);
+                        decimal = ((integer % 100) * 10000 + decimal) * 1.666667;
+                        integer /= 100;
 
                         p = strsep(&pbuffer, ","); // 7th comma
                         londir = (p[0] == 'E');
-                        longitude = (londir ? 1 : -1) * (integer * 10000 + decimal);
+                        longitude = (londir ? 1 : -1) * (integer * 1000000 + decimal);
 
                         p = strsep(&pbuffer, ","); // 8th comma
 

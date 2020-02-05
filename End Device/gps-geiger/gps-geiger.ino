@@ -1,4 +1,5 @@
 #define GPS_SWSERIAL 0
+#pragma pack(1)
 
 char debug_buf[32];
 
@@ -96,6 +97,7 @@ void I2C_Request() {
         Wire.write(p, sizeof(uint16_t));
     }
     else if (i2c_command == DATA_ALL) {
+        c.status = (gps.isActive() << STATUS_GPS);
         c.latitude = gps.getLatitude();
         c.longitude = gps.getLongitude();
         c.time = now();

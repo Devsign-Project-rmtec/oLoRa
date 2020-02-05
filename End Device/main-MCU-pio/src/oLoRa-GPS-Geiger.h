@@ -34,7 +34,7 @@ public:
     oLoRa_GPS_Geiger() {
     }
 
-    void updateData() {
+    void updateData(Packet* pkt) {
         uint8_t buffer[16] = { 0 };
         //Serial.println("begin");
         Wire.beginTransmission(COPROCESSOR_ADDR);
@@ -53,11 +53,12 @@ public:
             Serial.print(' ');
         }
         Serial.println();
-
+        
         memcpy(&c, buffer, sizeof(c));
-        Serial.print(c.latitude * 0.00001);
+
+        Serial.print(c.latitude);
         Serial.print('\t');
-        Serial.print(c.longitude * 0.00001);
+        Serial.print(c.longitude);
         Serial.print('\t');
         Serial.print(year(c.time));
         Serial.print(' ');
@@ -74,6 +75,21 @@ public:
         Serial.print('\t');
         Serial.print(c.geiger * 0.01);
         Serial.print('\n');
+
+        pkt->status = c.status;
+        pkt->latitude = (c.latitude & 0x80000000) | (abs(c.latitude) / 1000000) << 23 | (abs(c.latitude) % 1000000);
+        pkt->longitude = (c.longitude & 0x80000000) | (abs(c.longitude) / 1000000) << 23 | (abs(c.longitude) % 1000000);
+        pkt->radiation = c.geiger;
+
+        Serial.print(pkt->status, HEX);
+        Serial.print("\t");
+        Serial.print(pkt->latitude, HEX);
+        Serial.print('\t');
+        Serial.print(pkt->longitude, HEX);
+        Serial.print('\t');
+        Serial.print(pkt->radiation, HEX);
+        Serial.print('\n');
+
     }
     
     double getLatitude() {

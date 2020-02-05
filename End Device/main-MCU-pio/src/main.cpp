@@ -1,3 +1,5 @@
+#pragma pack(1)
+
 #include <Arduino.h>
 
 #include "MPU6050.h"
@@ -6,6 +8,8 @@ MPU6050 imu; // I2C 0x68
 #include "DFRobot_SHT20.h"
 DFRobot_SHT20 sht20; // I2C 0x40
 
+#include "packet.h"
+Packet packet;
 
 #include "oLoRa-GPS-Geiger.h"
 oLoRa_GPS_Geiger cop;
@@ -15,8 +19,7 @@ oLoRa_GPS_Geiger cop;
 #define LoRa Serial1
 #define TRANSMISSION_INTERVAL 10000
 
-#include "packet.h"
-Packet packet;
+
 
 void send_packet(HardwareSerial *s);
 char digit2HEXchar(byte d);
@@ -39,35 +42,9 @@ void setup() {
 
 void loop() {
     Serial.println("updating~~~~~~~~~~~~~~~~~~~~~");
-    cop.updateData();
-    delay(1000);
-    // int16_t x, y, z;
-    // imu.getAcceleration(&x, &y, &z);
-    // Serial.print(x);
-    // Serial.print('\t');
-    // Serial.print(y);
-    // Serial.print('\t');
-    // Serial.print(z);
-    // Serial.println();
-    // delay(10);
-
-    // float t, h;
-    // Serial.print("reading Temperature...");
-    // t = sht20.readTemperature();
-    // Serial.println("OK");
-    // h = sht20.readHumidity();
-    // Serial.print(t);
-    // Serial.print('\t');
-    // Serial.print(h);
-    // Serial.println();
-    // delay(100);
-
-    // if(Serial.available()) LoRa.write(Serial.read());
-    // if(LoRa.available()) Serial.write(LoRa.read());
-
-    // send_packet(&LoRa);
-    // Serial.println(UBRR1, BIN);
-    // delay(1000);
+    cop.updateData(&packet);
+    send_packet(&LoRa);
+    delay(10000);
 }
 
 void send_packet(HardwareSerial* s) {
