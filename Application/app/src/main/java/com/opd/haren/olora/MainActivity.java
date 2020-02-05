@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             });
 
                             for (final String eui : euiList) {
-                                if (eui.compareTo("0efb0903a2c6cca9") == 0) continue;
                                 Thread innerThread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
