@@ -28,7 +28,8 @@ void setup() {
     Serial.begin(115200);
     LoRa.begin(38400);
     Wire.begin();
-    delay(1000);
+    delay(500);
+    LoRa.print("at+join\r\n");
 
     packet.status = 0;
     packet.latitude = (0UL << 31) | (35UL << 23) | (549411UL << 0);
@@ -56,7 +57,7 @@ void send_packet(HardwareSerial* s) {
     //packet.debug(&Serial);
 
     long nowTime = millis();
-    if(nowTime - oldTime > 10000){
+    //if(nowTime - oldTime > 10000){
         s->print("at+send=lora:2:");
         for(int i = 0; i < sizeof(packet); i++) {
             byte v = reinterpret_cast<char *>(&packet)[i];
@@ -66,7 +67,7 @@ void send_packet(HardwareSerial* s) {
         s->print("\r\n");
         
         oldTime = nowTime;
-    }
+    //}
 }
 
 char digit2HEXchar(byte d){
