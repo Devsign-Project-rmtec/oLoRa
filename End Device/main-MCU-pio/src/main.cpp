@@ -28,8 +28,15 @@ void setup() {
     Serial.begin(115200);
     LoRa.begin(38400);
     Wire.begin();
+    Wire.setTimeout(100);
+    Serial.println("hello!");
     delay(500);
+    LoRa.print("at+version\r\n");
+    delay(100);
+    while(LoRa.available()) Serial.write(LoRa.read());
     LoRa.print("at+join\r\n");
+    while(!LoRa.available());
+    delay(500);
 
     packet.status = 0;
     packet.latitude = (0UL << 31) | (35UL << 23) | (549411UL << 0);
@@ -38,7 +45,10 @@ void setup() {
     packet.humidity = 5454;
     packet.battery = 75;
     packet.radiation = 75;
-    Serial.println("hello!");
+    sht20.initSHT20();
+    //sht20.checkSHT20();
+    delay(1000);
+    while(LoRa.available()) Serial.write(LoRa.read());
 }
 
 void loop() {
@@ -53,6 +63,9 @@ void send_packet(HardwareSerial* s) {
 
     packet.radiation = random(10, 500);
     packet.battery = random(0, 100);
+
+    packet.temperature = sht20.readTemperature() * 100;
+    packet.humidity = sht20.readHumidity() * 100;
 
     //packet.debug(&Serial);
 

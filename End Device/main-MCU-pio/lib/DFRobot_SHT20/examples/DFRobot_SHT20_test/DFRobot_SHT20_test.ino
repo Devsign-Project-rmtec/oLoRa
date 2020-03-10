@@ -20,6 +20,7 @@ DFRobot_SHT20    sht20;
 void setup()
 {
     Serial.begin(9600);
+    while(!Serial);
     Serial.println("SHT20 Example!");
     sht20.initSHT20();                                  // Init SHT20 Sensor
     delay(100);
